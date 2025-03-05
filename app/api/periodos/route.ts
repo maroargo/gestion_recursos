@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
         
         console.log(body);
 
-        /*const newPeriodo = await db.periodo.create({
+        const newPeriodo = await db.periodo.create({
             data: {                
                 periodo: body.periodo,
                 descripcion: body.descripcion,
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
             },
         });        
 
-        for (const pre of body.presupuestos) {            
+        /*for (const pre of body.presupuestos) {            
             await db.presupuesto.create({
                 data: {
                     nombre: pre.nombre,

@@ -2,6 +2,13 @@
 
 import React, {useState} from 'react';
 
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { Badge } from "@/components/ui/badge";
+
 import { Role } from '@prisma/client';
 import useSWR from "swr";
 import CreatePeriodo from '@/components/periodos/create-periodo';
@@ -81,7 +88,7 @@ export default function Periodos() {
             <thead className="bg-colorprimario1 text-white">
               <tr>
                 <th className="px-4 py-2 text-left">Período</th>                
-                <th className="px-4 py-2 text-left">Descripción</th>
+                <th className="px-4 py-2 text-left">Presupuestos</th>
                 <th className="px-4 py-2 text-left">Estado Periodo</th>
                 <th className="px-4 py-2 text-left">Estado</th>
                 <th className="px-4 py-2 text-left">Acciones</th>
@@ -94,9 +101,29 @@ export default function Periodos() {
                     key={periodo.id}
                     className="hover:bg-gray-50 border-b border-[#D3D3D3] "
                   >                    
-                    <td className="px-4 py-2">{periodo.periodo}</td>
-                    <td className="px-4 py-2">{periodo.descripcion}</td>
-                    <td className="px-4 py-2">{periodo.statusPeriodo}</td>
+                    <td className="px-4 py-2">{periodo.periodo} <br /> {periodo.descripcion}</td>                    
+                    <td className="px-4 py-2">
+                      {periodo.presupuestos.map((det) => (
+                        <HoverCard key={det.id}>
+                          <HoverCardTrigger>
+                            <Badge>{det.nombre}</Badge>                            
+                          </HoverCardTrigger>
+                          <HoverCardContent>
+                            <div>
+                              <div>Procesos Electorales: {det.procesos.length}</div>                              
+                              {det.procesos.length>0 && det.procesos.map((pro) => (
+                                 <div>- {pro.name}</div>
+                              ))}                                                          
+                            </div>
+                          </HoverCardContent>
+                        </HoverCard>
+                      ))}
+                    </td>
+                    <td className="px-4 py-2">
+                      {periodo.statusPeriodo === "vigente" && (
+                        <Badge variant="destructive">{periodo.statusPeriodo === "vigente" ? "Vigente" : ""}</Badge>                    
+                      )}                     
+                    </td>
                     <td className="px-4 py-2">{periodo.status}</td>
                     <td className="px-4 py-2">
                       <UpdatePeriodo periodo={periodo} />

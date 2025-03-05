@@ -187,7 +187,7 @@ export default function PeriodoForm({
                   />
                 </div>
                 
-                {selectedTipoPresupuesto === "cm7qhjsz100072whsuaeee6n8" && (
+                {selectedTipoPresupuesto !== "cm7qhjsz100072whsuaeee6n8" && (
                   <Button
                     type="button"
                     onClick={() => {
@@ -210,7 +210,7 @@ export default function PeriodoForm({
               <Separator className="my-4" />
 
               {/* Sección de procesos */}
-              {selectedTipoPresupuesto === "cm7qhjsz100072whsuaeee6n8" &&
+              {selectedTipoPresupuesto !== "cm7qhjsz100072whsuaeee6n8" &&
                 (form.watch(`presupuestos.${index}.procesos`) || []).map((_, procIndex) => (
                   <div key={procIndex} className="flex justify-between items-end mb-4 min-w-full gap-5">
 

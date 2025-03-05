@@ -39,7 +39,7 @@ const data = {
       url: "/home",       
     },   
     {
-      title: "Preuspuestos",      
+      title: "Presupuestos",      
       icon: CalendarCog,
       isActive: true,
       url: "/periodos",      
@@ -67,8 +67,14 @@ const data = {
       icon: UserRound,
       isActive: true,
       url: "/users",      
+    },     
+    {
+      title: "Cargar Información",      
+      icon: SquareM,
+      isActive: true,
+      url: "/reportes",      
     }, 
-    /*{
+    {
       title: "Metas",      
       icon: SquareM,
       isActive: true,
@@ -85,8 +91,8 @@ const data = {
       icon: SquareChartGantt,
       isActive: true,
       url: "/tareas",      
-    },*/ 
-    /*{
+    }, 
+    {
       title: "Bienes y Servicios",      
       icon: BadgeDollarSign,
       isActive: true,
@@ -115,7 +121,7 @@ const data = {
       icon: NotebookTabs,
       isActive: true,
       url: "/tdrs",      
-    }*/   
+    }
   ]
 }
 

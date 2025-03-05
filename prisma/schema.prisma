@@ -1,0 +1,408 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+ 
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Status {
+  activo
+  inactivo
+} 
+enum StatusPeriodo {
+  vigente
+  no_vigente
+} 
+
+model Role {
+  id            String          @id @default(cuid())
+  name          String             
+  status        Status          @default(activo)        
+
+  users         User[]
+  accessRoles   AccessRole[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Menu {
+  id            String          @id @default(cuid())
+  name          String  
+  url           String?
+  icon          String?
+  idMenu        String?
+
+  accessRoles   AccessRole[]
+
+  status        Status          @default(activo)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AccessRole {
+  id            String          @id @default(cuid())
+
+  role          Role?           @relation(fields: [idRole], references: [id])
+  idRole        String?
+
+  menu          Menu?           @relation(fields: [idMenu], references: [id])
+  idMenu        String?
+
+  access        Boolean         @default(false) 
+  add           Boolean         @default(false)     
+
+  status        Status          @default(activo)    
+    
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id            String          @id @default(cuid())
+  name          String
+  email         String          @unique
+  password      String
+  emailVerified DateTime?
+  phone         String  
+  image         String?
+  status        Status          @default(activo)        
+
+  role            Role?            @relation(fields: [idRole], references: [id])
+  idRole          String?
+
+  subgerencia     Subgerencia?        @relation(fields: [idSubgerencia], references: [id])
+  idSubgerencia   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Gerencia {
+  id            String          @id @default(cuid())
+  nombre        String          @unique
+  siglas        String          
+  titular       String          
+
+  organization     Organization?        @relation(fields: [idOrganization], references: [id])
+  idOrganization   String?
+
+  subgerencias      Subgerencia[] 
+  servicios         Servicio[]    
+
+  status        Status          @default(activo)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt  
+}
+
+model Subgerencia {
+  id            String          @id @default(cuid())
+  nombre        String          @unique
+  siglas        String          
+  titular       String 
+
+  gerencia      Gerencia?        @relation(fields: [idGerencia], references: [id])
+  idGerencia    String?         
+
+  users         User[]
+  metas         Meta[]
+  perfilAcademicos  PerfilAcademico[] 
+  servicios         Servicio[] 
+
+  status        Status          @default(activo)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt  
+}
+
+model VerificationToken {
+  identifier String             @unique
+  token      String
+  expires    DateTime
+  
+  @@id([identifier])
+}
+
+model Periodo {
+  id            String          @id @default(cuid())
+  periodo       String          @unique
+  descripcion   String?          
+  nombre        String?
+  statusPeriodo StatusPeriodo         @default(vigente)
+
+  organization       Organization?        @relation(fields: [idOrganization], references: [id])
+  idOrganization     String?
+  
+  presupuestos  Presupuesto[]
+  metas         Meta[]  
+  servicios     Servicio[]
+
+  status        Status          @default(activo)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt  
+}
+
+model Presupuesto {
+  id            String          @id @default(cuid())
+  nombre        String?
+  
+  periodo       Periodo?    @relation(fields: [idPeriodo], references: [id])
+  idPeriodo     String?
+
+  tipoPresupuesto       TipoPresupuesto?    @relation(fields: [idTipoPresupuesto], references: [id])
+  idTipoPresupuesto     String?  
+
+  procesos      Proceso[]
+  status        Status          @default(activo)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TipoPresupuesto {
+  id            String          @id @default(cuid())
+  value         String
+  name          String
+
+  presupuestos  Presupuesto[]
+
+  status        Status          @default(activo)  
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+} 
+
+model Proceso {
+  id            String          @id @default(cuid())  
+  name          String?
+  siglas        String?  
+
+  presupuesto   Presupuesto?    @relation(fields: [idPresupuesto], references: [id])
+  idPresupuesto String?
+
+  status        Status          @default(activo)  
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+} 
+
+model Organization {
+  id            String          @id @default(cuid())
+  name          String
+  email         String          @unique
+  address       String?  
+  logo          String?  
+  status        Status          @default(activo)  
+  
+  gerencias         Gerencia[]
+  periodos          Periodo[]    
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt  
+}
+
+model Meta {
+  id               String          @id @default(cuid())  
+  codigo           String
+  meta             String  
+  
+  periodo          Periodo?        @relation(fields: [idPeriodo], references: [id])
+  idPeriodo        String?
+
+  subgerencia      Subgerencia?        @relation(fields: [idSubgerencia], references: [id])
+  idSubgerencia    String?
+
+  actividades      Actividad[]
+  servicios         Servicio[]
+
+  status          Status          @default(activo)    
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Actividad {
+  id               String          @id @default(cuid())  
+  codigo           String
+  actividad        String  
+  
+  meta          Meta?        @relation(fields: [idMeta], references: [id])
+  idMeta        String?  
+
+  inicio       DateTime?                        
+  fin          DateTime?                        
+  ene          Int?
+  feb          Int?
+  mar          Int?
+  abr          Int?
+  may          Int?
+  jun          Int?
+  jul          Int?
+  ago          Int?
+  set          Int?
+  oct          Int?
+  nov          Int?
+  dic          Int?
+  total        Int?
+  prioridad    String?
+
+  tareas        Tarea[]
+
+  status          Status          @default(activo)    
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Tarea {
+  id               String          @id @default(cuid())  
+  codigo           String
+  tarea            String  
+  
+  actividad        Actividad?        @relation(fields: [idActividad], references: [id])
+  idActividad      String?  
+
+  inicio       DateTime?                        
+  fin          DateTime?                        
+  ene          Int?
+  feb          Int?
+  mar          Int?
+  abr          Int?
+  may          Int?
+  jun          Int?
+  jul          Int?
+  ago          Int?
+  set          Int?
+  oct          Int?
+  nov          Int?
+  dic          Int?
+  total        Int? 
+
+  status          Status          @default(activo)    
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GenericaGasto {
+  id            String          @id @default(cuid())
+  value         String
+  name          String  
+  status        Status          @default(activo)
+
+  servicios     Servicio[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+} 
+
+model TipoContrato {
+  id            String          @id @default(cuid())
+  value         String
+  name          String
+  siglas        String
+  status        Status          @default(activo)
+
+  servicios     Servicio[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+} 
+
+model UnidadMedida {
+  id            String          @id @default(cuid())
+  value         String
+  name          String  
+  status        Status          @default(activo)
+
+  servicios     Servicio[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Servicio {
+  id               String          @id @default(cuid()) 
+  descripcion      String     
+  
+  periodo        Periodo?        @relation(fields: [idPeriodo], references: [id])
+  idPeriodo      String?
+  gerencia        Gerencia?        @relation(fields: [idGerencia], references: [id])
+  idGerencia      String?
+  subgerencia        Subgerencia?        @relation(fields: [idSubgerencia], references: [id])
+  idSubgerencia      String?
+  meta               Meta?        @relation(fields: [idMeta], references: [id])
+  idMeta             String?  
+  tipoContrato           TipoContrato?        @relation(fields: [idTipoContrato], references: [id])
+  idTipoContrato         String?  
+  genericaGasto          GenericaGasto?        @relation(fields: [idGenericaGasto], references: [id])
+  idGenericaGasto        String?
+
+  clasificador    String?  
+  unidadMedida    UnidadMedida?        @relation(fields: [idUnidadMedida], references: [id])
+  idUnidadMedida   String?
+
+  cantidad        Int?             @default(0)          
+  precioUnitario  String?
+  enero           Int?             @default(0)
+  febrero         Int?             @default(0)
+  marzo           Int?             @default(0)
+  abril           Int?             @default(0)
+  mayo            Int?             @default(0)
+  junio           Int?             @default(0)
+  julio           Int?             @default(0)
+  agosto          Int?             @default(0)
+  setiembre       Int?             @default(0)
+  octubre         Int?             @default(0)
+  noviembre       Int?             @default(0)
+  diciembre       Int?             @default(0)
+  
+  totalCosto      String?
+
+  status          Status?          @default(activo)    
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model PerfilAcademico {
+  id                  String          @id @default(cuid())
+  cargo               String
+  monto               String
+  perfilAcademico     String                    
+  carrera             String
+  curso               String
+  experiencia         String
+  tiempoExperiencia   String
+  
+  subgerencia      Subgerencia?        @relation(fields: [idSubgerencia], references: [id])
+  idSubgerencia    String?
+
+  colaboradores   Colaborador[]
+
+  status          Status          @default(activo)    
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Colaborador {
+  id              String          @id @default(cuid())
+  nombres         String
+  paterno         String
+  materno         String                    
+  
+  perfilAcademico      PerfilAcademico?        @relation(fields: [idPerfilAcademico], references: [id])
+  idPerfilAcademico    String?
+
+  status          Status          @default(activo)    
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

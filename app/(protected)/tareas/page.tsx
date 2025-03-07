@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ITarea } from '@/interfaces/tarea';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -41,7 +42,7 @@ export default function Tareas() {
     data: tareas,
     error,
     isLoading,
-  } = useSWR<Tarea[]>(
+  } = useSWR<ITarea[]>(
     value ? `/api/tareas/id?idPresupuesto=${value}` : "/api/tareas",
     fetcher
   );  

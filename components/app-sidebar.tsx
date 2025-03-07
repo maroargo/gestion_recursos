@@ -75,6 +75,12 @@ const data = {
       url: "/reportes",      
     }, 
     {
+      title: "Planificación",      
+      icon: SquareM,
+      isActive: true,
+      url: "/planificacion",      
+    }, 
+    {
       title: "Metas",      
       icon: SquareM,
       isActive: true,

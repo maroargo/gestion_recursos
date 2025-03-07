@@ -7,4 +7,5 @@ export interface ITarea {
         
     idActividad: string
     actividad: IActividad
+    status: string 
 }

@@ -16,9 +16,10 @@ import TareaForm from "@/components/tareas/tarea-form";
 import { type TareaSchema } from "@/lib/zod";
 import { Pencil1Icon } from "@radix-ui/react-icons";
 import { useToast } from "@/hooks/use-toast";
-import { Tarea, Status } from "@prisma/client";
+import { Status } from "@prisma/client";
+import { ITarea } from "@/interfaces/tarea";
 
-export default function UpdateTarea({ tarea }: { tarea: Tarea }) {
+export default function UpdateTarea({ tarea }: { tarea: ITarea }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isUpdating, setIsUpdating] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");

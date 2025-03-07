@@ -7,4 +7,5 @@ export interface IActividad {
         
     idMeta: string
     meta: Meta
+    status: string 
 }

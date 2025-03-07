@@ -1,7 +1,5 @@
 import { db } from "@/lib/db";
-import { tareaSchema } from '@/lib/zod';
-import { Tarea, Status, StatusPeriodo } from '@prisma/client';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { auth } from "@/auth";
 
 export async function GET() {
@@ -24,6 +22,7 @@ export async function GET() {
             , ma.id_actividad
             , ma.actividad
             , t.id id_tarea
+            , t.codigo codigo_tarea
             , t.tarea
             FROM meta_actividad ma
                 LEFT JOIN tarea t ON t.idActividad = ma.id_actividad

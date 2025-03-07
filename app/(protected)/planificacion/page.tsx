@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/accordion";
 
 import { IPlanificacion } from "@/interfaces/planificacion";
-import { Label } from "recharts";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -72,7 +71,7 @@ export default function Tareas() {
     }
 
     if (plan.tarea) {
-      acc[plan.id_meta].actividades[plan.id_actividad].tareas.push(plan.tarea);
+      acc[plan.id_meta].actividades[plan.id_actividad].tareas.push(plan.codigo_tarea + " - " + plan.tarea);
     }
 
     return acc;

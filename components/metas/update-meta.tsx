@@ -16,9 +16,10 @@ import MetaForm from "@/components/metas/meta-form";
 import { type MetaSchema } from "@/lib/zod";
 import { Pencil1Icon } from "@radix-ui/react-icons";
 import { useToast } from "@/hooks/use-toast";
-import { Meta, Status } from "@prisma/client";
+import { Status } from "@prisma/client";
+import { IMeta } from "@/interfaces/meta";
 
-export default function UpdateMeta({ meta }: { meta: Meta }) {
+export default function UpdateMeta({ meta }: { meta: IMeta }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isUpdating, setIsUpdating] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
@@ -86,6 +87,7 @@ export default function UpdateMeta({ meta }: { meta: Meta }) {
                     defaultValues={{
                         codigo: meta.codigo || "",                        
                         meta: meta.meta || "",
+                        idPresupuesto: meta.idPresupuesto || "",
                         idStatus: meta.status == Status.activo ? "0" : "1",                        
                     }}
                     onSubmit={onSubmit}

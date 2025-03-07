@@ -135,8 +135,7 @@ export const metaSchema = object({
     .min(1, "Código es requerido"),
   meta: string({ required_error: "Meta es requerido" })
     .min(1, "Meta es requerido"),
-  idPeriodo: string().optional(), 
-  idSubgerencia: string().optional(),       
+  idPresupuesto: string().optional(),      
   idStatus: string().optional()  
 });
 
@@ -156,7 +155,9 @@ export const tareaSchema = object({
   tarea: string({ required_error: "Tarea es requerido" })
     .min(1, "Tarea es requerido"),
   idActividad: string({ required_error: "Actividad es requerido" })
-    .min(1, "Actividad es requerido"),   
+    .min(1, "Actividad es requerido"), 
+  idGerencia: string().optional(),
+  idSubgerencia: string().optional(),  
   idStatus: string().optional()  
 });
 

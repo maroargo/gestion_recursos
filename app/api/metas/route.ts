@@ -5,27 +5,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from "@/auth";
 
 export async function GET() {
-    try {  
+    try { 
         const session = await auth();              
-        const esAdmin = session?.user.role?.name == "Administrador";
-
-        //El periodo trabaja desde la Organizacion seleccionada
-        const periodo = await db.periodo.findFirst({
-            where: { 
-                AND: [
-                    { statusPeriodo: StatusPeriodo.vigente },
-                    ...(!esAdmin ? [{ idOrganization: session?.user.idOrganization }] : []),
-                ]                
-            },
-        }); 
                 
         const data = await db.meta.findMany({ 
             include: {
-                periodo: true
+                presupuesto: true
             },  
-            where: {                                                                
-                idPeriodo: periodo?.id,
-                ...(!esAdmin ? { subgerencia: { gerencia: { idOrganization: session?.user.idOrganization } } } : {}),                                
+            where: {                  
+                AND: [
+                    { presupuesto: { periodo: { statusPeriodo: StatusPeriodo.vigente } } },                    
+                    { presupuesto: { periodo: { idOrganization: session?.user.idOrganization } } }
+                ]                                                                                                             
             },                                
             orderBy: {
                 createdAt: 'asc',
@@ -40,8 +31,6 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
     try {
-        const session = await auth();
-
         const body = await request.json();
         const result = metaSchema.safeParse(body);
 
@@ -49,24 +38,13 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ message: 'Invalid input', errors: result.error.errors }, { status: 400 });
         }
 
-        const data = result.data;
-
-        //El periodo trabaja desde la Organizacion seleccionada
-        const periodo = await db.periodo.findFirst({
-            where: { 
-                AND: [
-                    { statusPeriodo: StatusPeriodo.vigente },
-                    { idOrganization: session?.user.idOrganization },
-                ]                
-            },
-        }); 
+        const data = result.data;        
 
         const newData = await db.meta.create({
             data: {
                 codigo: data.codigo,
                 meta: data.meta,
-                idPeriodo: periodo?.id,
-                idSubgerencia: session?.user.gerencia?.idSubgerencia
+                idPresupuesto: data.idPresupuesto                
             },
         });
 
@@ -100,8 +78,6 @@ export async function DELETE(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
     try {
-        const session = await auth();
-
         const body = await request.json();
         const { id, ...rest } = body;
         const result = metaSchema.safeParse(rest);
@@ -114,26 +90,14 @@ export async function PUT(request: NextRequest) {
 
         if (!id) {
             return NextResponse.json({ message: 'Meta ID es requerido' }, { status: 400 });
-        }
-
-        //El periodo trabaja desde la Organizacion seleccionada
-        const periodo = await db.periodo.findFirst({
-            where: { 
-                AND: [
-                    { statusPeriodo: StatusPeriodo.vigente },
-                    { idOrganization: session?.user.idOrganization },
-                ]                
-            },
-        });
+        }        
 
         const updated = await db.meta.update({
             where: { id },
             data: {                
                 codigo: data.codigo,
                 meta: data.meta,
-                status: rest.idStatus == "0" ? Status.activo : Status.inactivo,                
-                idPeriodo: periodo?.id,
-                idSubgerencia: session?.user.gerencia?.idSubgerencia            
+                status: rest.idStatus == "0" ? Status.activo : Status.inactivo,                            
             },
         });
 

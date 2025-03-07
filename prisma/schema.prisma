@@ -91,6 +91,7 @@ model Gerencia {
   idOrganization   String?
 
   subgerencias      Subgerencia[] 
+  tareas            Tarea[]
   servicios         Servicio[]    
 
   status        Status          @default(activo)
@@ -108,10 +109,10 @@ model Subgerencia {
   gerencia      Gerencia?        @relation(fields: [idGerencia], references: [id])
   idGerencia    String?         
 
-  users         User[]
-  metas         Meta[]
+  users             User[]  
   perfilAcademicos  PerfilAcademico[] 
-  servicios         Servicio[] 
+  tareas            Tarea[] 
+  servicios         Servicio[]
 
   status        Status          @default(activo)
 
@@ -137,8 +138,7 @@ model Periodo {
   organization       Organization?        @relation(fields: [idOrganization], references: [id])
   idOrganization     String?
   
-  presupuestos  Presupuesto[]
-  metas         Meta[]  
+  presupuestos  Presupuesto[]   
   servicios     Servicio[]
 
   status        Status          @default(activo)
@@ -158,6 +158,7 @@ model Presupuesto {
   idTipoPresupuesto     String?  
 
   procesos      Proceso[]
+  metas         Meta[] 
   status        Status          @default(activo)
 
   createdAt DateTime @default(now())
@@ -208,17 +209,14 @@ model Organization {
 
 model Meta {
   id               String          @id @default(cuid())  
-  codigo           String
+  codigo           String          @unique
   meta             String  
   
-  periodo          Periodo?        @relation(fields: [idPeriodo], references: [id])
-  idPeriodo        String?
-
-  subgerencia      Subgerencia?        @relation(fields: [idSubgerencia], references: [id])
-  idSubgerencia    String?
+  presupuesto      Presupuesto?        @relation(fields: [idPresupuesto], references: [id])
+  idPresupuesto    String?  
 
   actividades      Actividad[]
-  servicios         Servicio[]
+  servicios        Servicio[]
 
   status          Status          @default(activo)    
 
@@ -227,8 +225,8 @@ model Meta {
 }
 
 model Actividad {
-  id               String          @id @default(cuid())  
-  codigo           String
+  id               String    @id @default(cuid())  
+  codigo           String    @unique    
   actividad        String  
   
   meta          Meta?        @relation(fields: [idMeta], references: [id])
@@ -251,9 +249,9 @@ model Actividad {
   total        Int?
   prioridad    String?
 
-  tareas        Tarea[]
+  tareas       Tarea[]
 
-  status          Status          @default(activo)    
+  status       Status          @default(activo)    
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -264,6 +262,11 @@ model Tarea {
   codigo           String
   tarea            String  
   
+  gerencia         Gerencia?        @relation(fields: [idGerencia], references: [id])
+  idGerencia       String?
+  subgerencia      Subgerencia?        @relation(fields: [idSubgerencia], references: [id])
+  idSubgerencia    String?
+
   actividad        Actividad?        @relation(fields: [idActividad], references: [id])
   idActividad      String?  
 
@@ -330,18 +333,18 @@ model Servicio {
   id               String          @id @default(cuid()) 
   descripcion      String     
   
-  periodo        Periodo?        @relation(fields: [idPeriodo], references: [id])
-  idPeriodo      String?
-  gerencia        Gerencia?        @relation(fields: [idGerencia], references: [id])
-  idGerencia      String?
+  periodo            Periodo?        @relation(fields: [idPeriodo], references: [id])
+  idPeriodo          String?
+  gerencia           Gerencia?        @relation(fields: [idGerencia], references: [id])
+  idGerencia         String?
   subgerencia        Subgerencia?        @relation(fields: [idSubgerencia], references: [id])
   idSubgerencia      String?
   meta               Meta?        @relation(fields: [idMeta], references: [id])
   idMeta             String?  
-  tipoContrato           TipoContrato?        @relation(fields: [idTipoContrato], references: [id])
-  idTipoContrato         String?  
-  genericaGasto          GenericaGasto?        @relation(fields: [idGenericaGasto], references: [id])
-  idGenericaGasto        String?
+  tipoContrato       TipoContrato?        @relation(fields: [idTipoContrato], references: [id])
+  idTipoContrato     String?  
+  genericaGasto      GenericaGasto?        @relation(fields: [idGenericaGasto], references: [id])
+  idGenericaGasto    String?
 
   clasificador    String?  
   unidadMedida    UnidadMedida?        @relation(fields: [idUnidadMedida], references: [id])

@@ -54,7 +54,7 @@ export default function TareaForm({
     { id: "1", name: "Inactivo" },
   ];
 
-  const { data: actividades } = useSWR<Actividad[]>("/api/actividades/active", fetcher);
+  const { data: actividades } = useSWR<Actividad[]>("/api/actividades", fetcher);
   const actividadList = actividades || [];
   
   return (

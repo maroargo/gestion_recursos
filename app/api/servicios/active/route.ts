@@ -5,18 +5,7 @@ import { Status, StatusPeriodo } from "@prisma/client";
 
 export async function GET() {
     try {  
-        const session = await auth();              
-        const esAdmin = session?.user.role?.name == "Administrador";
-
-        //El periodo trabaja desde la Organizacion seleccionada
-        const periodo = await db.periodo.findFirst({
-            where: { 
-                AND: [
-                    { statusPeriodo: StatusPeriodo.vigente },
-                    { idOrganization: session?.user.idOrganization },
-                ]                
-            },
-        });
+        const session = await auth();                      
 
         const data = await db.servicio.findMany({ 
             include: {
@@ -33,9 +22,8 @@ export async function GET() {
             },  
             where: { 
                 AND: [
-                    { status: Status.activo },
-                    { meta: { idPeriodo: periodo?.id } },
-                    ...(!esAdmin ? [{ meta: { subgerencia: { gerencia: { idOrganization: session?.user.idOrganization } } } }] : []),
+                    { periodo: { statusPeriodo: StatusPeriodo.vigente } },                    
+                    { periodo: { idOrganization: session?.user.idOrganization } } ,
                 ]
             },                                
             orderBy: {

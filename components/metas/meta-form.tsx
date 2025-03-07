@@ -2,6 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import useSWR from "swr";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -23,7 +24,7 @@ import { Input } from "@/components/ui/input";
 
 import { metaSchema, type MetaSchema } from "@/lib/zod";
 import { IStatus } from "@/interfaces/status";
-import { Periodo } from "@prisma/client";
+import { Periodo, Presupuesto } from "@prisma/client";
 
 interface MetaFormProps {
   defaultValues: MetaSchema;
@@ -46,6 +47,12 @@ export default function MetaForm({
     resolver: zodResolver(metaSchema),
     defaultValues,
   });
+
+  const { data: presupuestos } = useSWR<Presupuesto[]>(
+    "/api/presupuestos/active",
+    fetcher
+  );
+  const presupuestoList = presupuestos || [];
 
   const statusList: IStatus[] = [
     { id: "0", name: "Activo" },
@@ -78,6 +85,34 @@ export default function MetaForm({
               <FormControl>
                 <Input {...field} />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="idPresupuesto"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Presupuesto</FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar presupuesto" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {presupuestoList.map((pre) => (
+                    <SelectItem key={pre.id} value={pre.id}>
+                      {pre.nombre}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}

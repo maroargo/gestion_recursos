@@ -1,26 +1,51 @@
 "use client";
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import CreateActividad from '@/components/actividades/create-actividad';
 import UpdateActividad from '@/components/actividades/update-actividad';
 import DeleteActividad from '@/components/actividades/delete-actividad';
-import { Actividad, Role } from '@prisma/client';
+import { Actividad, Presupuesto, Role } from '@prisma/client';
 import useSWR from "swr";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function Actividads() {
   const [searchTerm, setSearchTerm] = useState('');
-  
+  const [value, setValue] = React.useState("");
+ 
+  const { data: role } = useSWR<Role>("/api/roles/user", fetcher);
+  const isAdmin = role ? role.name == "Administrador" : false; 
+
+  const { data: presupuestos } = useSWR<Presupuesto[]>(
+    "/api/presupuestos/active",
+    fetcher
+  );
+  const presupuestoList = presupuestos || [];
+
+  useEffect(() => {
+      if (presupuestoList.length > 0 && !value) {
+        setValue(presupuestoList[0].id); // Establece el primer presupuesto
+      }
+  }, [presupuestoList]);
+
   const {
     data: actividads,
     error,
     isLoading,
-  } = useSWR<Actividad[]>("/api/actividades", fetcher);  
-
-  const { data: role } = useSWR<Role>("/api/roles/user", fetcher);
-  const isAdmin = role ? role.name == "Administrador" : false;  
+  } = useSWR<Actividad[]>(
+    value ? `/api/actividades/id?idPresupuesto=${value}` : "/api/actividades",
+    fetcher    
+  );   
+  const actividadList = actividads || [];   
 
   if (isLoading)
     return (
@@ -33,9 +58,7 @@ export default function Actividads() {
     );
 
   if (error) return <div>Ocurrió un error.</div>;
-
-  const actividadList = actividads || [];
-
+  
   const filteredData = actividadList.filter(item => 
     item.actividad.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -53,26 +76,30 @@ export default function Actividads() {
 
         <div className="flex justify-between items-center ">
           <div className="flex justify-between items-center mb-4">
-            <label className="text-sm text-gray-600">
-              <span className="pr-1">Mostrar</span>
-
-              <select className="border border-gray-300 rounded px-2 py-1">
-                <option>10</option>
-                <option>25</option>
-                <option>50</option>
-                <option>100</option>
-              </select>
-              <span className="pl-1">registros</span>
-            </label>  
+            <Select value={value} onValueChange={setValue}>
+              <SelectTrigger className="w-[300px]">
+                <SelectValue placeholder="Seleccione presupuesto" />
+              </SelectTrigger>
+              <SelectContent>
+                {presupuestoList.map((pre) => (
+                  <SelectItem key={pre.id} value={pre.id}>
+                    {pre.nombre}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>  
           </div>
           
-          <input 
-            type="text" 
-            placeholder="Buscar por actividad..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="border border-colorprimario1 rounded-md  px-3 py-1"
-          />
+          <div className="flex justify-between items-center mb-4">
+            <input 
+              type="text" 
+              placeholder="Buscar por actividad..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-[300px] border border-colorprimario1 rounded-md  px-3 py-1"
+            />
+          </div>
+          
         </div>
 
         <div className="overflow-x-auto">

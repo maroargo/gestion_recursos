@@ -32,6 +32,7 @@ export default function CreateMeta() {
     defaultValues: {
       codigo: "",
       meta: "",
+      idPresupuesto: "",
       idStatus: "0"
     },
   });
@@ -87,6 +88,7 @@ export default function CreateMeta() {
           defaultValues={{
             codigo: "",
             meta: "",
+            idPresupuesto: "",
             idStatus: "0",            
           }}
           onSubmit={onSubmit}

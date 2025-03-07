@@ -6,28 +6,17 @@ import { auth } from "@/auth";
 
 export async function GET() {
     try {  
-        const session = await auth();              
-        const esAdmin = session?.user.role?.name == "Administrador";
-
-        //El periodo trabaja desde la Organizacion seleccionada
-        const periodo = await db.periodo.findFirst({
-            where: { 
-                AND: [
-                    { statusPeriodo: StatusPeriodo.vigente },
-                    { idOrganization: session?.user.idOrganization },
-                ]                
-            },
-        }); 
+        const session = await auth();                      
         
         const data = await db.tarea.findMany({ 
             include: {
                 actividad: true
             },  
-            where: {                 
+            where: { 
                 AND: [
-                    { actividad: { meta: { idPeriodo: periodo?.id } } },
-                    ...(!esAdmin ? [{ actividad: { meta: { subgerencia: { gerencia: { idOrganization: session?.user.idOrganization } } } } }] : []),
-                ]                
+                    { actividad: { meta: { presupuesto: { periodo: { statusPeriodo: StatusPeriodo.vigente } } } } },
+                    { actividad: { meta: { presupuesto: { periodo: { idOrganization: session?.user.idOrganization } } } } }
+                ] 
             },                                
             orderBy: {
                 createdAt: 'asc',

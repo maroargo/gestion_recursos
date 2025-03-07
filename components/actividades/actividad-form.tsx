@@ -53,7 +53,7 @@ export default function ActividadForm({
     { id: "1", name: "Inactivo" },
   ];
 
-  const { data: metas } = useSWR<Meta[]>("/api/metas/active", fetcher);
+  const { data: metas } = useSWR<Meta[]>("/api/metas", fetcher);
   const metaList = metas || [];
 
   return (

@@ -114,7 +114,7 @@ const data = {
       title: "Colaboradores",      
       icon: Users,
       isActive: true,
-      url: "/employees",      
+      url: "/colaboradores",      
     }, 
     {
       title: "Contratos",      

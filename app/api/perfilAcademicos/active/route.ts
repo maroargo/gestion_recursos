@@ -12,7 +12,8 @@ export async function GET() {
             include: {
                 subgerencia: true
             }, 
-            where: {                
+            where: {    
+                status: Status.activo,            
                 ...(!esAdmin ? { subgerencia: { gerencia: { idOrganization: session?.user.idOrganization } } } : {}),                
             },                    
             orderBy: {

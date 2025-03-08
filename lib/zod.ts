@@ -227,12 +227,23 @@ export const perfilAcademicoSchema = object({
 });
 
 export const colaboradorSchema = object({
+  dni: string({ required_error: "DNI es requerido" })
+    .min(1, "DNI es requerido"), 
+  ruc: string({ required_error: "RUC es requerido" })
+    .min(1, "RUC es requerido"), 
   nombres: string({ required_error: "Nombres es requerido" })
     .min(1, "Nombres es requerido"),  
   paterno: string({ required_error: "Apellido Paterno es requerido" })
     .min(1, "Apellido Paterno es requerido"),   
   materno: string({ required_error: "Apellido Materno es requerido" })
-    .min(1, "Apellido Materno es requerido"),  
+    .min(1, "Apellido Materno es requerido"),    
+  correo: string({ required_error: "Correo es requerido" })
+    .min(1, "Correo es requerido")
+    .email("Correo no válido"),
+  celular: string({ required_error: "Celular es requerido" })
+    .min(1, "Celular es requerido"),
+  idPerfilAcademico: string({ required_error: "Perfil Académico es requerido" })
+    .min(1, "Perfil Académico es requerido"),   
   idStatus: string().optional()
 });
 

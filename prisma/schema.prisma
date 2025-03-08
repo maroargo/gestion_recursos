@@ -397,9 +397,13 @@ model PerfilAcademico {
 
 model Colaborador {
   id              String          @id @default(cuid())
+  dni             String          @unique
+  ruc             String
   nombres         String
   paterno         String
   materno         String                    
+  correo          String
+  celular         String
   
   perfilAcademico      PerfilAcademico?        @relation(fields: [idPerfilAcademico], references: [id])
   idPerfilAcademico    String?

@@ -128,18 +128,18 @@ export default function Tareas() {
                     <td className="px-4 py-2">{tarea.inicio ? new Date(tarea.inicio).toLocaleDateString() : "No definido"}</td>
                     <td className="px-4 py-2">{tarea.fin ? new Date(tarea.fin).toLocaleDateString() : "No definido"}</td>
                     <td className="px-4 py-2 w-[200px]">
-                      {tarea.ene === 1 && <Badge>{"Ene"}</Badge>}
-                      {tarea.feb === 1 && <Badge>{"Feb"}</Badge>}
-                      {tarea.mar === 1 && <Badge variant="destructive">{"Mar"}</Badge>}
-                      {tarea.abr === 1 && <Badge>{"Abr"}</Badge>}
-                      {tarea.may === 1 && <Badge>{"May"}</Badge>}
-                      {tarea.jun === 1 && <Badge>{"Jun"}</Badge>}
-                      {tarea.jul === 1 && <Badge>{"Jul"}</Badge>}
-                      {tarea.ago === 1 && <Badge>{"Ago"}</Badge>}
-                      {tarea.set === 1 && <Badge>{"Set"}</Badge>}
-                      {tarea.oct === 1 && <Badge>{"Oct"}</Badge>}
-                      {tarea.nov === 1 && <Badge>{"Nov"}</Badge>}
-                      {tarea.dic === 1 && <Badge>{"Dic"}</Badge>}
+                      {tarea.ene !== 0 && <Badge>{"Ene"}</Badge>}
+                      {tarea.feb !== 0 && <Badge>{"Feb"}</Badge>}
+                      {tarea.mar !== 0 && <Badge variant="destructive">{"Mar"}</Badge>}
+                      {tarea.abr !== 0 && <Badge>{"Abr"}</Badge>}
+                      {tarea.may !== 0 && <Badge>{"May"}</Badge>}
+                      {tarea.jun !== 0 && <Badge>{"Jun"}</Badge>}
+                      {tarea.jul !== 0 && <Badge>{"Jul"}</Badge>}
+                      {tarea.ago !== 0 && <Badge>{"Ago"}</Badge>}
+                      {tarea.set !== 0 && <Badge>{"Set"}</Badge>}
+                      {tarea.oct !== 0 && <Badge>{"Oct"}</Badge>}
+                      {tarea.nov !== 0 && <Badge>{"Nov"}</Badge>}
+                      {tarea.dic !== 0 && <Badge>{"Dic"}</Badge>}
                     </td>
                     <td className="px-4 py-2">{tarea.status}</td>
                     <td className="px-4 py-2">

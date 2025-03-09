@@ -108,6 +108,7 @@ export default function Actividads() {
               <tr>
                 <th className="px-4 py-2 text-left">Código</th>
                 <th className="px-4 py-2 text-left">Actividad Operativa</th>
+                <th className="px-4 py-2 text-left">Prioridad</th>
                 <th className="px-4 py-2 text-left">Estado</th>
                 <th className="px-4 py-2 text-left">Acciones</th>
               </tr>
@@ -121,6 +122,7 @@ export default function Actividads() {
                   >
                     <td className="px-4 py-2">{actividad.codigo}</td>
                     <td className="px-4 py-2">{actividad.actividad}</td>
+                    <td className="px-4 py-2">{actividad.prioridad}</td>
                     <td className="px-4 py-2">{actividad.status}</td>
                     <td className="px-4 py-2">
                       <UpdateActividad actividad={actividad} />

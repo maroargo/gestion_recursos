@@ -72,11 +72,14 @@ export default function Tareas() {
     }
 
     if (plan.tarea) {
-      acc[plan.id_meta].actividades[plan.id_actividad].tareas.push(plan.codigo_tarea + " - " + plan.tarea);
+      acc[plan.id_meta].actividades[plan.id_actividad].tareas.push({
+        codigo: plan.codigo_tarea,
+        nombre: plan.tarea
+      });
     }
 
     return acc;
-  }, {} as Record<string, { meta: string; actividades: Record<string, { actividad: string; tareas: string[] }> }>);
+  }, {} as Record<string, { meta: string; actividades: Record<string, { actividad: string; tareas: { codigo: string; nombre: string }[] }> }>);
 
   return (
     <div className="bg-white p-4 py-6 rounded-md">
@@ -112,13 +115,32 @@ export default function Tareas() {
                     <AccordionItem key={id_actividad} value={id_actividad}>
                       <AccordionTrigger>{actividad}</AccordionTrigger>
                       <AccordionContent>
-                        <ul className="list-disc pl-6">
-                          {tareas.length > 0 ? (
-                            tareas.map((tarea, index) => <li key={index}>{tarea}</li>)
-                          ) : (
-                            <li className="text-gray-500">Sin tareas</li>
-                          )}
-                        </ul>
+                        <div className="overflow-x-auto">
+                          <table className="min-w-full border border-gray-300">
+                            <thead>
+                              <tr className="bg-gray-200">
+                                <th className="border px-4 py-2">Código</th>
+                                <th className="border px-4 py-2">Tarea</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {tareas.length > 0 ? (
+                                tareas.map((tarea, index) => (
+                                  <tr key={index} className="border-b">
+                                    <td className="border px-4 py-2">{tarea.codigo}</td>
+                                    <td className="border px-4 py-2">{tarea.nombre}</td>
+                                  </tr>
+                                ))
+                              ) : (
+                                <tr>
+                                  <td colSpan={2} className="border px-4 py-2 text-gray-500 text-center">
+                                    Sin tareas
+                                  </td>
+                                </tr>
+                              )}
+                            </tbody>
+                          </table>
+                        </div>
                       </AccordionContent>
                     </AccordionItem>
                   ))}

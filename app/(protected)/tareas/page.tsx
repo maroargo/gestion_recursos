@@ -2,11 +2,12 @@
 
 import React, {useEffect, useState} from 'react';
 
-import { Tarea, Role, Presupuesto } from '@prisma/client';
+import {  Role, Presupuesto } from '@prisma/client';
 import useSWR from "swr";
 import CreateTarea from '@/components/tareas/create-tarea';
 import UpdateTarea from '@/components/tareas/update-tarea';
 import DeleteTarea from '@/components/tareas/delete-tarea';
+import { Badge } from "@/components/ui/badge";
 
 import {
   Select,
@@ -108,6 +109,9 @@ export default function Tareas() {
               <tr>
                 <th className="px-4 py-2 text-left">Código</th>
                 <th className="px-4 py-2 text-left">Tarea</th>
+                <th className="px-4 py-2 text-left">Inicio</th>
+                <th className="px-4 py-2 text-left">Fin</th>                
+                <th className="px-4 py-2 text-left w-[200px]">Planificación</th>
                 <th className="px-4 py-2 text-left">Estado</th>
                 <th className="px-4 py-2 text-left">Acciones</th>
               </tr>
@@ -121,6 +125,22 @@ export default function Tareas() {
                   >
                     <td className="px-4 py-2">{tarea.codigo}</td>
                     <td className="px-4 py-2">{tarea.tarea}</td>
+                    <td className="px-4 py-2">{tarea.inicio ? new Date(tarea.inicio).toLocaleDateString() : "No definido"}</td>
+                    <td className="px-4 py-2">{tarea.fin ? new Date(tarea.fin).toLocaleDateString() : "No definido"}</td>
+                    <td className="px-4 py-2 w-[200px]">
+                      {tarea.ene === 1 && <Badge>{"Ene"}</Badge>}
+                      {tarea.feb === 1 && <Badge>{"Feb"}</Badge>}
+                      {tarea.mar === 1 && <Badge variant="destructive">{"Mar"}</Badge>}
+                      {tarea.abr === 1 && <Badge>{"Abr"}</Badge>}
+                      {tarea.may === 1 && <Badge>{"May"}</Badge>}
+                      {tarea.jun === 1 && <Badge>{"Jun"}</Badge>}
+                      {tarea.jul === 1 && <Badge>{"Jul"}</Badge>}
+                      {tarea.ago === 1 && <Badge>{"Ago"}</Badge>}
+                      {tarea.set === 1 && <Badge>{"Set"}</Badge>}
+                      {tarea.oct === 1 && <Badge>{"Oct"}</Badge>}
+                      {tarea.nov === 1 && <Badge>{"Nov"}</Badge>}
+                      {tarea.dic === 1 && <Badge>{"Dic"}</Badge>}
+                    </td>
                     <td className="px-4 py-2">{tarea.status}</td>
                     <td className="px-4 py-2">
                       <UpdateTarea tarea={tarea} />

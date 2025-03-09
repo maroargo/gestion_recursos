@@ -15,7 +15,8 @@ export async function GET() {
             where: { 
                 AND: [
                     { actividad: { meta: { presupuesto: { periodo: { statusPeriodo: StatusPeriodo.vigente } } } } },
-                    { actividad: { meta: { presupuesto: { periodo: { idOrganization: session?.user.idOrganization } } } } }
+                    { actividad: { meta: { presupuesto: { periodo: { idOrganization: session?.user.idOrganization } } } } },
+                    { idSubgerencia: session?.user.gerencia?.idSubgerencia }
                 ] 
             },                                
             orderBy: {

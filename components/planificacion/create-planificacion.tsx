@@ -74,7 +74,7 @@ export default function CreatePlanificacion() {
           
           form.reset();
           setDialogOpen(false);
-          mutate("/api/planificacion");
+          mutate(`/api/planificacion/id?idPresupuesto=${info.idPresupuesto}`);
           setErrorMessage("");
 
           toast({

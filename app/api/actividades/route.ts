@@ -19,7 +19,7 @@ export async function GET() {
             where: { 
                 AND: [
                     { meta: { presupuesto: { periodo: { statusPeriodo: StatusPeriodo.vigente } } } },
-                    { meta: { presupuesto: { periodo: { idOrganization: session?.user.idOrganization } } } }
+                    { meta: { presupuesto: { periodo: { idOrganization: session?.user.idOrganization } } } },                    
                 ]           
             },                                
             orderBy: {

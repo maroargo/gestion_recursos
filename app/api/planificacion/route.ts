@@ -1,7 +1,8 @@
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from "@/auth";
-import { StatusPeriodo } from "@prisma/client";
+import { tareaSchema } from '@/lib/zod';
+import { Tarea } from "@prisma/client";
 
 export async function GET() {
     try {  
@@ -125,7 +126,7 @@ export async function POST(request: NextRequest) {
                         //Identificar Subgerencia
                         const subgerencia = await db.subgerencia.findFirst({
                             where: { siglas: i.GERENCIA?.trim().toUpperCase() }
-                        });                        
+                        });                                              
 
                         await db.tarea.create({
                             data: {
@@ -154,6 +155,8 @@ export async function POST(request: NextRequest) {
                         });
 
                         //Insertar finalmente las tareas sin actividad
+                        console.log(arrayTareas.length);
+                        arrayTareas = [];
                         //await db.tarea.createMany({
                         //    data: arrayTareas
                         //});
@@ -176,4 +179,39 @@ export async function POST(request: NextRequest) {
         );
       }
       
+}
+
+export async function PUT(request: NextRequest) {
+    try {
+        const body = await request.json();
+        const { id, ...rest } = body;
+        const result = tareaSchema.safeParse(rest);
+        
+        if (!result.success) {
+            return NextResponse.json({ message: 'Invalid input', errors: result.error.errors }, { status: 400 });
+        }
+
+        const data = result.data as Tarea;
+
+        if (!id) {
+            return NextResponse.json({ message: 'Tarea ID es requerido' }, { status: 400 });
+        }
+
+        const updated = await db.tarea.update({
+            where: { id },
+            data: {                
+                codigo: data.codigo,
+                tarea: data.tarea,
+                idActividad: data.idActividad                                                
+            },
+        });
+
+        if (!updated) {
+            return NextResponse.json({ message: 'Tarea no válida' }, { status: 404 });
+        }
+
+        return NextResponse.json(updated, { status: 200 });
+    } catch (error) {        
+        return NextResponse.json({ message: 'Ocurrió un error' }, { status: 500 });
+    }
 }

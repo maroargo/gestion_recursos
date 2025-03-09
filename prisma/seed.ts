@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   
+  await prisma.role.deleteMany();
   const roleA = await prisma.role.upsert({
     where: { id: '', name: 'Administrador' },
     update: {},
@@ -18,6 +19,7 @@ async function main() {
   
   const role = await prisma.role.findFirst({ where: { name: 'Administrador' } })  
 
+  await prisma.user.deleteMany();
   const passwordHash = await bcrypt.hash("123123", 10);
   const user = await prisma.user.upsert({
     where: { id: '', name: 'Administrador', email:'admin@gestion.com', password:passwordHash, phone: '' },
@@ -25,6 +27,7 @@ async function main() {
     create: { name: 'Administrador', email:'admin@gestion.com', password:passwordHash, phone: '', idRole: role.id },
   })
 
+  await prisma.periodo.deleteMany();
   const periodoA = await prisma.periodo.upsert({
     where: { id: '', periodo: '2024', descripcion: 'Periodo Anual 2024', nombre: 'Año del Bicentenario, de la consolidación de nuestra Independencia, y de la conmemoración de las heroicas batallas de Junín y Ayacucho' },
     update: {},
@@ -36,6 +39,7 @@ async function main() {
     create: { periodo: '2025', descripcion: 'Periodo Anual 2025', nombre: 'Año de la recuperación y consolidación de la economía peruana' },
   })
 
+  await prisma.tipoPresupuesto.deleteMany();
   const periodo = await prisma.periodo.findFirst({ where: { periodo: '2025' } })  
   const tipoPresA = await prisma.tipoPresupuesto.upsert({
     where: { id: '', name: 'FUNC 2025' },
@@ -48,12 +52,14 @@ async function main() {
     create: { value: '2', name: 'PROCESOS ELECTORALES', idPeriodo: periodo.id },
   })  
 
+  await prisma.genericaGasto.deleteMany();
   const genericagastoA = await prisma.genericaGasto.upsert({
     where: { id: '', name: 'Servicios' },
     update: {},
     create: { value: '2.3', name: 'Servicios' },
   })
 
+  await prisma.tipoContrato.deleteMany();
   const tipoContratoA = await prisma.tipoContrato.upsert({
     where: { id: '', name: 'LOCACION' },
     update: {},
@@ -65,12 +71,13 @@ async function main() {
     create: { value: '2', name: 'ORDEN DE SERVICIO', siglas: 'OS' },
   })
 
-  const medidaA = await prisma.tipoContrato.upsert({
+  await prisma.unidadMedida.deleteMany();
+  const medidaA = await prisma.unidadMedida.upsert({
     where: { id: '', name: 'Locador' },
     update: {},
     create: { value: '1', name: 'Locador' },
   })
-  const medidaB = await prisma.tipoContrato.upsert({
+  const medidaB = await prisma.unidadMedida.upsert({
     where: { id: '', name: 'Servicio' },
     update: {},
     create: { value: '2', name: 'Servicio' },

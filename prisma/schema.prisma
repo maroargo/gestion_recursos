@@ -295,7 +295,8 @@ model Tarea {
 model GenericaGasto {
   id            String          @id @default(cuid())
   value         String
-  name          String  
+  name          String 
+  descripcion   String 
   status        Status          @default(activo)
 
   servicios     Servicio[]

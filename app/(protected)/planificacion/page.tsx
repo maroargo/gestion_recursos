@@ -20,6 +20,8 @@ import {
 
 import { IPlanificacion } from "@/interfaces/planificacion";
 import CreatePlanificacion from "@/components/planificacion/create-planificacion";
+import { IPlaniTarea } from "@/interfaces/tarea";
+import UpdatePlaniTarea from "@/components/planificacion/update-planificacion-tarea";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -73,13 +75,16 @@ export default function Tareas() {
 
     if (plan.tarea) {
       acc[plan.id_meta].actividades[plan.id_actividad].tareas.push({
+        idActividad: plan.id_actividad,
+        idTarea: plan.id_tarea,
         codigo: plan.codigo_tarea,
-        nombre: plan.tarea
+        nombre: plan.tarea,
+        idPresupuesto: value
       });
     }
 
     return acc;
-  }, {} as Record<string, { meta: string; actividades: Record<string, { actividad: string; tareas: { codigo: string; nombre: string }[] }> }>);
+  }, {} as Record<string, { meta: string; actividades: Record<string, { actividad: string; tareas: IPlaniTarea[] }> }>);
 
   return (
     <div className="bg-white p-4 py-6 rounded-md">
@@ -121,6 +126,7 @@ export default function Tareas() {
                               <tr className="bg-gray-200">
                                 <th className="border px-4 py-2">Código</th>
                                 <th className="border px-4 py-2">Tarea</th>
+                                <th className="border px-4 py-2">Acciones</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -129,6 +135,9 @@ export default function Tareas() {
                                   <tr key={index} className="border-b">
                                     <td className="border px-4 py-2">{tarea.codigo}</td>
                                     <td className="border px-4 py-2">{tarea.nombre}</td>
+                                    <td className="border px-4 py-2">
+                                      <UpdatePlaniTarea planiTarea={tarea} />                                                                                 
+                                    </td>
                                   </tr>
                                 ))
                               ) : (

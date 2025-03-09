@@ -5,8 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Gestión",
-  description: "Gestión App",
+  title: "Gestión de Recursos - ONPE",
+  description: "Gestión de Recursos App",
 };
 
 export default function RootLayout({ children } : Readonly<{ children: React.ReactNode }>) {

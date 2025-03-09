@@ -130,6 +130,12 @@ export const subgerenciaSchema = object({
   idStatus: string().optional()  
 });
 
+export const planificacionSchema = object({  
+  idPresupuesto: string({ required_error: "Presupuesto es requerido" })
+    .min(1, "Presupuesto es requerido"), 
+  archivo: z.instanceof(File).nullable() 
+});
+
 export const metaSchema = object({
   codigo: string({ required_error: "Código es requerido" })
     .min(1, "Código es requerido"),
@@ -258,6 +264,7 @@ export type OrganizationSchema = z.infer<typeof organizationSchema>;
 
 export type GerenciaSchema = z.infer<typeof gerenciaSchema>;
 export type SubgerenciaSchema = z.infer<typeof subgerenciaSchema>;
+export type PlanificacionSchema = z.infer<typeof planificacionSchema>;
 export type MetaSchema = z.infer<typeof metaSchema>;
 export type ActividadSchema = z.infer<typeof actividadSchema>;
 export type TareaSchema = z.infer<typeof tareaSchema>;

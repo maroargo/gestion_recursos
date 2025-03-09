@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/accordion";
 
 import { IPlanificacion } from "@/interfaces/planificacion";
+import CreatePlanificacion from "@/components/planificacion/create-planificacion";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -79,7 +80,11 @@ export default function Tareas() {
 
   return (
     <div className="bg-white p-4 py-6 rounded-md">
-      <h1 className="text-xl font-medium mb-5">Planificación</h1>
+      <div className="flex justify-between items-center mb-5">
+        <h1 className="text-xl font-medium">Planificación</h1>
+        
+        <CreatePlanificacion />
+      </div>      
 
       <div className="mb-4">
         <Select value={value} onValueChange={setValue}>

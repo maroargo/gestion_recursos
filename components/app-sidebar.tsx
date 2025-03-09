@@ -67,12 +67,6 @@ const data = {
       icon: UserRound,
       isActive: true,
       url: "/users",      
-    },     
-    {
-      title: "Cargar Información",      
-      icon: SquareM,
-      isActive: true,
-      url: "/reportes",      
     }, 
     {
       title: "Planificación",      

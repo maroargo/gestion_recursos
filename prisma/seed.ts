@@ -39,24 +39,23 @@ async function main() {
     create: { periodo: '2025', descripcion: 'Periodo Anual 2025', nombre: 'Año de la recuperación y consolidación de la economía peruana' },
   })
 
-  await prisma.tipoPresupuesto.deleteMany();
-  const periodo = await prisma.periodo.findFirst({ where: { periodo: '2025' } })  
+  await prisma.tipoPresupuesto.deleteMany();  
   const tipoPresA = await prisma.tipoPresupuesto.upsert({
-    where: { id: '', name: 'FUNC 2025' },
+    where: { id: '', name: 'FUNC' },
     update: {},
-    create: { value: '1', name: 'FUNC 2025', idPeriodo: periodo.id },
+    create: { value: '1', name: 'FUNC' },
   })
   const tipoPresB = await prisma.tipoPresupuesto.upsert({
-    where: { id: '', name: 'PROCESOS ELECTORALES' },
+    where: { id: '', name: 'PROCESO ELECTORAL' },
     update: {},
-    create: { value: '2', name: 'PROCESOS ELECTORALES', idPeriodo: periodo.id },
+    create: { value: '2', name: 'PROCESO ELECTORAL' },
   })  
 
   await prisma.genericaGasto.deleteMany();
   const genericagastoA = await prisma.genericaGasto.upsert({
-    where: { id: '', name: 'Servicios' },
+    where: { id: '', name: 'BIENES Y SERVICIOS' },
     update: {},
-    create: { value: '2.3', name: 'Servicios' },
+    create: { value: '2.3', name: 'BIENES Y SERVICIOS', descripcion: 'GASTOS POR CONCEPTO DE ADQUISICIÓN DE BIENES PARA EL FUNCIONAMIENTO INSTITUCIONAL Y CUMPLIMIENTO DE FUNCIONES, ASI COMO POR LOS PAGOS POR SERVICIOS DE DIVERSA NATURALEZA PRESTADOS POR PERSONAS NATURALES, SIN VÍNCULO LABORAL CON EL ESTADO, O PERSONAS JURÍDICAS' },
   })
 
   await prisma.tipoContrato.deleteMany();

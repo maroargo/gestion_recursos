@@ -87,6 +87,7 @@ export const periodoSchema = object({
     .min(1, "Período es requerido"),
   descripcion: string(),    
   nombre: string().optional(),  
+  uit: string().optional(), 
   idOrganization: string().optional(),
   idStatusPeriodo: string().optional(),
 

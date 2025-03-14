@@ -104,6 +104,7 @@ export async function PUT(request: NextRequest) {
                 periodo: rest.periodo,
                 descripcion: rest.descripcion,
                 nombre: rest.nombre,
+                uit: rest.uit,
                 statusPeriodo: rest.idStatusPeriodo == "0" ? StatusPeriodo.vigente : StatusPeriodo.no_vigente,
                 status: rest.idStatus == "0" ? Status.activo : Status.inactivo,    
                 idOrganization: session?.user.idOrganization                            

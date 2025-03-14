@@ -104,20 +104,36 @@ export default function PeriodoForm({
           />
         </div>
 
-        <FormField
-          control={form.control}
-          name="nombre"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nombre</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="grid auto-rows-min gap-4 md:grid-cols-2">
+          <FormField
+            control={form.control}
+            name="nombre"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nombre</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
+          <FormField
+            control={form.control}
+            name="uit"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>UIT</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        
         <div className="flex justify-end gap-4">
           <Button
             type="button"
@@ -185,22 +201,19 @@ export default function PeriodoForm({
                       </FormItem>
                     )}
                   />
-                </div>
+                </div>                                
                 
-                {selectedTipoPresupuesto !== "cm7qhjsz100072whsuaeee6n8" && (
-                  <Button
-                    type="button"
-                    onClick={() => {
-                      form.setValue(`presupuestos.${index}.procesos`, [
-                        ...(form.getValues(`presupuestos.${index}.procesos`) || []),
-                        { name: "", siglas: "" },
-                      ]);
-                    }}
-                  >
-                    <CirclePlus className="mr-2" />
-                    Agregar Proceso
-                  </Button>
-                )}                
+                <Button
+                  type="button"
+                  onClick={() => {
+                    form.setValue(`presupuestos.${index}.procesos`, [
+                      ...(form.getValues(`presupuestos.${index}.procesos`) || []),
+                      { name: "", siglas: "" },
+                    ]);
+                  }}
+                >
+                  <CirclePlus className="mr-2" />                    
+                </Button>               
 
                 <Button type="button" onClick={() => remove(index)}>
                   <Trash2 />

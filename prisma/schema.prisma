@@ -133,9 +133,10 @@ model Periodo {
   periodo       String          @unique
   descripcion   String?          
   nombre        String?
+  uit           String?
   statusPeriodo StatusPeriodo         @default(vigente)
 
-  organization       Organization?        @relation(fields: [idOrganization], references: [id])
+  organization       Organization?    @relation(fields: [idOrganization], references: [id])
   idOrganization     String?
   
   presupuestos  Presupuesto[]   

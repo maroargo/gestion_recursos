@@ -33,6 +33,7 @@ export default function CreatePeriodo() {
       periodo: "",
       descripcion: "",
       nombre: "",
+      uit: "",
       presupuestos: [],
       idStatus: "0"
     },
@@ -101,6 +102,7 @@ export default function CreatePeriodo() {
             periodo: "",
             descripcion: "",
             nombre: "",
+            uit: "",
             presupuestos: [],
             idStatus: "0",            
           }}

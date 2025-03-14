@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from 'react';
 
-import {  Role, Presupuesto } from '@prisma/client';
+import {  Role, Presupuesto, Actividad } from '@prisma/client';
 import useSWR from "swr";
 import CreateTarea from '@/components/tareas/create-tarea';
 import UpdateTarea from '@/components/tareas/update-tarea';
@@ -23,6 +23,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 export default function Tareas() {
   const [searchTerm, setSearchTerm] = useState('');
   const [value, setValue] = React.useState("");
+  const [valueA, setValueA] = React.useState("");
  
   const { data: role } = useSWR<Role>("/api/roles/user", fetcher);
   const isAdmin = role ? role.name == "Administrador" : false; 
@@ -32,6 +33,12 @@ export default function Tareas() {
     fetcher
   );
   const presupuestoList = presupuestos || [];
+
+  const { data: actividades } = useSWR<Actividad[]>(
+    "/api/actividades/active",
+    fetcher
+  );
+  const actividadList = actividades || [];
 
   useEffect(() => {
       if (presupuestoList.length > 0 && !value) {
@@ -44,7 +51,7 @@ export default function Tareas() {
     error,
     isLoading,
   } = useSWR<ITarea[]>(
-    value ? `/api/tareas/id?idPresupuesto=${value}` : "/api/tareas",
+    value ? `/api/tareas/id?idActividad=${valueA}&idPresupuesto=${value}` : "/api/tareas",
     fetcher
   );  
   const tareaList = tareas || [];
@@ -64,6 +71,8 @@ export default function Tareas() {
   const filteredData = tareaList.filter(item => 
     item.tarea.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const currentMonth = new Date().getMonth() + 1; // Obtener el mes actual (1 = Enero, 2 = Febrero, ..., 3 = Marzo)
 
   return (
     <>
@@ -86,6 +95,21 @@ export default function Tareas() {
                 {presupuestoList.map((pre) => (
                   <SelectItem key={pre.id} value={pre.id}>
                     {pre.nombre}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>    
+          </div>
+
+          <div className="flex justify-between items-center mb-4">
+            <Select value={valueA} onValueChange={setValueA}>
+              <SelectTrigger className="w-[500px]">
+                <SelectValue placeholder="Seleccione actividad" />
+              </SelectTrigger>
+              <SelectContent>
+                {actividadList.map((act) => (
+                  <SelectItem key={act.id} value={act.id}>
+                    {act.actividad}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -128,18 +152,42 @@ export default function Tareas() {
                     <td className="px-4 py-2">{tarea.inicio ? new Date(tarea.inicio).toLocaleDateString() : "No definido"}</td>
                     <td className="px-4 py-2">{tarea.fin ? new Date(tarea.fin).toLocaleDateString() : "No definido"}</td>
                     <td className="px-4 py-2 w-[200px]">
-                      {tarea.ene !== 0 && <Badge>{"Ene"}</Badge>}
-                      {tarea.feb !== 0 && <Badge>{"Feb"}</Badge>}
-                      {tarea.mar !== 0 && <Badge variant="destructive">{"Mar"}</Badge>}
-                      {tarea.abr !== 0 && <Badge>{"Abr"}</Badge>}
-                      {tarea.may !== 0 && <Badge>{"May"}</Badge>}
-                      {tarea.jun !== 0 && <Badge>{"Jun"}</Badge>}
-                      {tarea.jul !== 0 && <Badge>{"Jul"}</Badge>}
-                      {tarea.ago !== 0 && <Badge>{"Ago"}</Badge>}
-                      {tarea.set !== 0 && <Badge>{"Set"}</Badge>}
-                      {tarea.oct !== 0 && <Badge>{"Oct"}</Badge>}
-                      {tarea.nov !== 0 && <Badge>{"Nov"}</Badge>}
-                      {tarea.dic !== 0 && <Badge>{"Dic"}</Badge>}
+                      {tarea.ene !== 0 && (
+                        <Badge variant={currentMonth === 1 ? "destructive" : "default"}>{"Ene"}</Badge>
+                      )}                      
+                      {tarea.feb !== 0 && (
+                        <Badge variant={currentMonth === 2 ? "destructive" : "default"}>{"Feb"}</Badge>
+                      )}                     
+                      {tarea.mar !== 0 && (
+                        <Badge variant={currentMonth === 3 ? "destructive" : "default"}>{"Mar"}</Badge>
+                      )}
+                      {tarea.abr !== 0 && (
+                        <Badge variant={currentMonth === 4 ? "destructive" : "default"}>{"Abr"}</Badge>
+                      )}
+                      {tarea.may !== 0 && (
+                        <Badge variant={currentMonth === 5 ? "destructive" : "default"}>{"May"}</Badge>
+                      )}
+                      {tarea.jun !== 0 && (
+                        <Badge variant={currentMonth === 6 ? "destructive" : "default"}>{"Jun"}</Badge>
+                      )}
+                      {tarea.jul !== 0 && (
+                        <Badge variant={currentMonth === 7 ? "destructive" : "default"}>{"Jul"}</Badge>
+                      )}
+                      {tarea.ago !== 0 && (
+                        <Badge variant={currentMonth === 8 ? "destructive" : "default"}>{"Ago"}</Badge>
+                      )}
+                      {tarea.set !== 0 && (
+                        <Badge variant={currentMonth === 9 ? "destructive" : "default"}>{"Set"}</Badge>
+                      )}
+                      {tarea.oct !== 0 && (
+                        <Badge variant={currentMonth === 10 ? "destructive" : "default"}>{"Oct"}</Badge>
+                      )}
+                      {tarea.nov !== 0 && (
+                        <Badge variant={currentMonth === 11 ? "destructive" : "default"}>{"Nov"}</Badge>
+                      )}
+                      {tarea.dic !== 0 && (
+                        <Badge variant={currentMonth === 12 ? "destructive" : "default"}>{"Dic"}</Badge>
+                      )}
                     </td>
                     <td className="px-4 py-2">{tarea.status}</td>
                     <td className="px-4 py-2">

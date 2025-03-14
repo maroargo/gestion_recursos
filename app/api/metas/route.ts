@@ -12,7 +12,7 @@ export async function GET() {
             include: {
                 presupuesto: true
             },  
-            where: {                  
+            where: {                                  
                 AND: [
                     { presupuesto: { periodo: { statusPeriodo: StatusPeriodo.vigente } } },                    
                     { presupuesto: { periodo: { idOrganization: session?.user.idOrganization } } }

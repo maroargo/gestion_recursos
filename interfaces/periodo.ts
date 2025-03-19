@@ -30,7 +30,8 @@ export interface IPresupuesto {
     status: string
 }
 
-export interface IProceso {    
+export interface IProceso {  
+    id: string  
     name: string
     siglas: string
 

@@ -34,7 +34,7 @@ export default function Tareas() {
 
   useEffect(() => {
     if (presupuestoList.length > 0 && !value) {
-      setValue(presupuestoList[0].id); // Establece el primer presupuesto automáticamente
+      setValue(presupuestoList[0].id);
     }
   }, [presupuestoList]);
 
@@ -57,13 +57,10 @@ export default function Tareas() {
 
   if (error) return <div>Ocurrió un error.</div>;
 
-  // Agrupar las actividades y tareas por meta
+  // Agrupar actividades y tareas por meta
   const metasMap = planificacionList.reduce((acc, plan) => {
     if (!acc[plan.id_meta]) {
-      acc[plan.id_meta] = { 
-        meta: plan.meta, 
-        actividades: {} 
-      };
+      acc[plan.id_meta] = { meta: plan.meta, actividades: {} };
     }
 
     if (!acc[plan.id_meta].actividades[plan.id_actividad]) {
@@ -79,7 +76,7 @@ export default function Tareas() {
         idTarea: plan.id_tarea,
         codigo: plan.codigo_tarea,
         nombre: plan.tarea,
-        idPresupuesto: value
+        idPresupuesto: value,
       });
     }
 
@@ -87,16 +84,15 @@ export default function Tareas() {
   }, {} as Record<string, { meta: string; actividades: Record<string, { actividad: string; tareas: IPlaniTarea[] }> }>);
 
   return (
-    <div className="bg-white p-4 py-6 rounded-md">
+    <div className="bg-white p-6 rounded-lg shadow-md">
       <div className="flex justify-between items-center mb-5">
-        <h1 className="text-xl font-medium">Planificación</h1>
-        
+        <h1 className="text-2xl font-semibold text-gray-700">Planificación</h1>
         <CreatePlanificacion />
-      </div>      
+      </div>
 
       <div className="mb-4">
         <Select value={value} onValueChange={setValue}>
-          <SelectTrigger className="w-[300px]">
+          <SelectTrigger className="w-[300px] border border-gray-300 shadow-sm">
             <SelectValue placeholder="Seleccione presupuesto" />
           </SelectTrigger>
           <SelectContent>
@@ -107,23 +103,27 @@ export default function Tareas() {
             ))}
           </SelectContent>
         </Select>
-      </div>      
+      </div>
 
       {planificacionList.length > 0 ? (
-        <Accordion type="multiple" className="w-full">
+        <Accordion type="multiple" className="w-full space-y-3">
           {Object.entries(metasMap).map(([id_meta, { meta, actividades }]) => (
-            <AccordionItem key={id_meta} value={id_meta}>
-              <AccordionTrigger>{meta}</AccordionTrigger>
-              <AccordionContent>
-                <Accordion type="multiple">
+            <AccordionItem key={id_meta} value={id_meta} className="border rounded-lg shadow-sm">
+              <AccordionTrigger className="p-4 bg-blue-100 text-lg font-semibold rounded-t-lg transition-all hover:bg-blue-200">
+                {meta}
+              </AccordionTrigger>
+              <AccordionContent className="bg-gray-50 p-4 rounded-b-lg">
+                <Accordion type="multiple" className="space-y-2">
                   {Object.entries(actividades).map(([id_actividad, { actividad, tareas }]) => (
-                    <AccordionItem key={id_actividad} value={id_actividad}>
-                      <AccordionTrigger>{actividad}</AccordionTrigger>
-                      <AccordionContent>
+                    <AccordionItem key={id_actividad} value={id_actividad} className="border rounded-lg">
+                      <AccordionTrigger className="p-3 bg-green-100 text-md font-medium rounded-t-lg transition-all hover:bg-green-200">
+                        {actividad}
+                      </AccordionTrigger>
+                      <AccordionContent className="bg-white p-4 rounded-b-lg shadow-sm">
                         <div className="overflow-x-auto">
-                          <table className="min-w-full border border-gray-300">
+                          <table className="min-w-full border border-gray-300 shadow-md rounded-lg">
                             <thead>
-                              <tr className="bg-gray-200">
+                              <tr className="bg-gray-200 text-gray-700">
                                 <th className="border px-4 py-2">Código</th>
                                 <th className="border px-4 py-2">Tarea</th>
                                 <th className="border px-4 py-2">Acciones</th>
@@ -132,17 +132,17 @@ export default function Tareas() {
                             <tbody>
                               {tareas.length > 0 ? (
                                 tareas.map((tarea, index) => (
-                                  <tr key={index} className="border-b">
+                                  <tr key={index} className="border-b bg-white hover:bg-gray-100">
                                     <td className="border px-4 py-2">{tarea.codigo}</td>
                                     <td className="border px-4 py-2">{tarea.nombre}</td>
-                                    <td className="border px-4 py-2">
-                                      <UpdatePlaniTarea planiTarea={tarea} />                                                                                 
+                                    <td className="border px-4 py-2 text-center">
+                                      <UpdatePlaniTarea planiTarea={tarea} />
                                     </td>
                                   </tr>
                                 ))
                               ) : (
                                 <tr>
-                                  <td colSpan={2} className="border px-4 py-2 text-gray-500 text-center">
+                                  <td colSpan={3} className="border px-4 py-2 text-gray-500 text-center">
                                     Sin tareas
                                   </td>
                                 </tr>
@@ -157,13 +157,10 @@ export default function Tareas() {
               </AccordionContent>
             </AccordionItem>
           ))}
-        </Accordion>    
+        </Accordion>
       ) : (
-        <div className="overflow-x-auto">
-          <div className="px-4 py-2">No se encontraron registros</div>
-        </div>        
+        <div className="p-4 text-gray-500 text-center">No se encontraron registros</div>
       )}
-      
     </div>
   );
 }

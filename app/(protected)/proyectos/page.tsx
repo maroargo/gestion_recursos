@@ -1,7 +1,6 @@
 "use client";
 
-import React, {useEffect, useState} from 'react';
-
+import React, { useState } from 'react';
 import CreateProyecto from '@/components/proyectos/create-proyecto';
 import UpdateProyecto from '@/components/proyectos/update-proyecto';
 import DeleteProyecto from '@/components/proyectos/delete-proyecto';
@@ -21,10 +20,7 @@ export default function Proyectos() {
     data: proyectos,
     error,
     isLoading,
-  } = useSWR<IProyecto[]>(
-    "/api/proyectos",
-    fetcher    
-  );   
+  } = useSWR<IProyecto[]>("/api/proyectos", fetcher);   
   const proyectoList = proyectos || [];   
 
   if (isLoading)
@@ -44,73 +40,40 @@ export default function Proyectos() {
   );
 
   return (
-    <>
-      <div className="bg-white p-4 py-6 rounded-md">
-        <div className="flex justify-between items-center mb-5">
-          <h1 className="text-xl font-medium">Proyectos</h1>
-          
-          {!isAdmin && (
-            <CreateProyecto />
-          )}
-        </div>
-
-        <div className="flex justify-between items-center ">
-          <div className="flex justify-between items-center mb-4">
-             
-          </div>
-          
-          <div className="flex justify-between items-center mb-4">
-            <input 
-              type="text" 
-              placeholder="Buscar por nombre..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-[300px] border border-colorprimario1 rounded-md  px-3 py-1"
-            />
-          </div>
-          
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="min-w-full table-auto border-collapse text-sm">
-            <thead className="bg-colorprimario1 text-white">
-              <tr>
-                <th className="px-4 py-2 text-left">Proyecto</th>
-                <th className="px-4 py-2 text-left">Acrónimo</th>
-                <th className="px-4 py-2 text-left">Periodo</th>
-                <th className="px-4 py-2 text-left">Estado</th>
-                <th className="px-4 py-2 text-left">Acciones</th>
-              </tr>
-            </thead>
-            <tbody className="text-gray-700">
-              {filteredData.length > 0 ? (
-                filteredData.map((proyecto) => (
-                  <tr
-                    key={proyecto.id}
-                    className="hover:bg-gray-50 border-b border-[#D3D3D3] "
-                  >
-                    <td className="px-4 py-2">{proyecto.nombre}</td>
-                    <td className="px-4 py-2">{proyecto.acronimo}</td>                                        
-                    <td className="px-4 py-2">{proyecto.periodo.nombre}</td>
-                    <td className="px-4 py-2">{proyecto.status}</td>
-                    <td className="px-4 py-2">
-                      <UpdateProyecto proyecto={proyecto} />
-                      {isAdmin && (
-                        <DeleteProyecto id={proyecto.id} />                        
-                      )}                                            
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td className="px-4 py-2">No se encontraron registros</td>
-                </tr>
-              )}
-              
-            </tbody>
-          </table>
-        </div>
+    <div className="bg-white p-6 rounded-md">
+      <div className="flex justify-between items-center mb-5">
+        <h1 className="text-xl font-medium">Proyectos</h1>
+        {!isAdmin && <CreateProyecto />}
       </div>
-    </>
+
+      <div className="mb-4">
+        <input 
+          type="text" 
+          placeholder="Buscar por nombre..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full border border-gray-300 rounded-md px-3 py-2"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredData.length > 0 ? (
+          filteredData.map((proyecto) => (
+            <div key={proyecto.id} className="border rounded-lg shadow-md p-4 bg-gray-50">
+              <h2 className="text-sm font-semibold text-gray-800 truncate">{proyecto.nombre}</h2>
+              <p className="text-sm text-gray-600">Acrónimo: {proyecto.acronimo}</p>
+              <p className="text-sm font-bold text-blue-600">Periodo: {proyecto.periodo.periodo}</p>
+              <p className="text-sm text-gray-600">Estado: {proyecto.status}</p>
+              <div className="mt-3 flex space-x-2">
+                <UpdateProyecto proyecto={proyecto} />
+                <DeleteProyecto id={proyecto.id} />
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="col-span-full text-center text-gray-500">No se encontraron registros</p>
+        )}
+      </div>
+    </div>
   );
 }

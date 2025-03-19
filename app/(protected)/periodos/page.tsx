@@ -79,7 +79,7 @@ export default function Periodos() {
             placeholder="Buscar por periodo..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="border border-colorprimario1 rounded-md  px-3 py-1"
+            className="border border-colorprimario1 rounded-md px-3 py-1"
           />
         </div>
 
@@ -104,30 +104,32 @@ export default function Periodos() {
                   >                    
                     <td className="px-4 py-2"><b>{periodo.periodo}</b> <br /> {periodo.descripcion}</td>      
                     <td className="px-4 py-2">{periodo.uit}</td>                    
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-2 flex flex-wrap gap-2">
                       {periodo.presupuestos.map((det) => (
                         <HoverCard key={det.id}>
-                          <HoverCardTrigger>
-                            <Badge>{det.nombre}</Badge>                            
+                          <HoverCardTrigger className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md cursor-pointer hover:bg-gray-300">
+                            {det.nombre}
                           </HoverCardTrigger>
-                          <HoverCardContent>
-                            <div>
-                              <div>Procesos Electorales: {det.procesos.length}</div>                              
-                              {det.procesos.length>0 && det.procesos.map((pro) => (
-                                 <div>- {pro.name}</div>
-                              ))}                                                          
-                            </div>
+                          <HoverCardContent className="p-4 bg-white shadow-lg rounded-lg">
+                            <div className="text-sm font-medium text-gray-900">Procesos Electorales: {det.procesos.length}</div>
+                            {det.procesos.length > 0 && (
+                              <ul className="mt-2 text-sm text-gray-700">
+                                {det.procesos.map((pro) => (
+                                  <li key={pro.id} className="list-disc ml-4">{pro.name}</li>
+                                ))}
+                              </ul>
+                            )}                                                           
                           </HoverCardContent>
                         </HoverCard>
                       ))}
                     </td>
                     <td className="px-4 py-2">
                       {periodo.statusPeriodo === "vigente" && (
-                        <Badge variant="destructive">{periodo.statusPeriodo === "vigente" ? "Vigente" : ""}</Badge>                    
+                        <span className="px-3 py-1 text-white bg-red-500 rounded-md">Vigente</span>
                       )}                     
                     </td>
                     <td className="px-4 py-2">{periodo.status}</td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-2 flex space-x-2">
                       <UpdatePeriodo periodo={periodo} />
                       {isAdmin && (
                         <DeletePeriodo id={periodo.id} />                        
@@ -137,7 +139,7 @@ export default function Periodos() {
                 ))
               ) : (
                 <tr>
-                  <td className="px-4 py-2">No se encontraron registros</td>
+                  <td className="px-4 py-2" colSpan={6}>No se encontraron registros</td>
                 </tr>
               )}
               

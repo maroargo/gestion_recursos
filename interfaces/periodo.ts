@@ -5,6 +5,7 @@ export interface IPeriodo {
     periodo: string
     descripcion: string
     nombre: string
+    uit: string
 
     organization: Organization
     idOrganization:  string

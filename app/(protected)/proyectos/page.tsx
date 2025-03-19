@@ -2,31 +2,30 @@
 
 import React, {useEffect, useState} from 'react';
 
-import CreateColaborador from '@/components/colaboradores/create-colaborador';
-import UpdateColaborador from '@/components/colaboradores/update-colaborador';
-import DeleteColaborador from '@/components/colaboradores/delete-colaborador';
+import CreateProyecto from '@/components/proyectos/create-proyecto';
+import UpdateProyecto from '@/components/proyectos/update-proyecto';
+import DeleteProyecto from '@/components/proyectos/delete-proyecto';
 import { Role } from '@prisma/client';
 import useSWR from "swr";
-
-import { IColaborador } from '@/interfaces/colaborador';
+import { IProyecto } from '@/interfaces/proyecto';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-export default function Colaboradors() {
+export default function Proyectos() {
   const [searchTerm, setSearchTerm] = useState('');  
  
   const { data: role } = useSWR<Role>("/api/roles/user", fetcher);
   const isAdmin = role ? role.name == "Administrador" : false;   
 
   const {
-    data: colaboradores,
+    data: proyectos,
     error,
     isLoading,
-  } = useSWR<IColaborador[]>(
-    "/api/colaboradores",
+  } = useSWR<IProyecto[]>(
+    "/api/proyectos",
     fetcher    
   );   
-  const colaboradorList = colaboradores || [];   
+  const proyectoList = proyectos || [];   
 
   if (isLoading)
     return (
@@ -40,18 +39,18 @@ export default function Colaboradors() {
 
   if (error) return <div>Ocurrió un error.</div>;
   
-  const filteredData = colaboradorList.filter(item => 
-    item.nombres.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredData = proyectoList.filter(item => 
+    item.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <>
       <div className="bg-white p-4 py-6 rounded-md">
         <div className="flex justify-between items-center mb-5">
-          <h1 className="text-xl font-medium">Colaboradores</h1>
+          <h1 className="text-xl font-medium">Proyectos</h1>
           
           {!isAdmin && (
-            <CreateColaborador />
+            <CreateProyecto />
           )}
         </div>
 
@@ -76,32 +75,28 @@ export default function Colaboradors() {
           <table className="min-w-full table-auto border-collapse text-sm">
             <thead className="bg-colorprimario1 text-white">
               <tr>
-                <th className="px-4 py-2 text-left">Nombres</th>
-                <th className="px-4 py-2 text-left">DNI / RUC</th>
-                <th className="px-4 py-2 text-left">Correo</th>
-                <th className="px-4 py-2 text-left">Celular</th>
-                <th className="px-4 py-2 text-left">Perfil Académico</th>
+                <th className="px-4 py-2 text-left">Proyecto</th>
+                <th className="px-4 py-2 text-left">Acrónimo</th>
+                <th className="px-4 py-2 text-left">Periodo</th>
                 <th className="px-4 py-2 text-left">Estado</th>
                 <th className="px-4 py-2 text-left">Acciones</th>
               </tr>
             </thead>
             <tbody className="text-gray-700">
               {filteredData.length > 0 ? (
-                filteredData.map((colaborador) => (
+                filteredData.map((proyecto) => (
                   <tr
-                    key={colaborador.id}
+                    key={proyecto.id}
                     className="hover:bg-gray-50 border-b border-[#D3D3D3] "
                   >
-                    <td className="px-4 py-2">{colaborador.nombres} {colaborador.paterno} {colaborador.materno}</td>
-                    <td className="px-4 py-2">DNI: {colaborador.dni} <br /> RUC: {colaborador.ruc}</td>
-                    <td className="px-4 py-2">{colaborador.correo}</td>
-                    <td className="px-4 py-2">{colaborador.celular}</td>
-                    <td className="px-4 py-2">{colaborador.perfilAcademico.cargo}</td>
-                    <td className="px-4 py-2">{colaborador.status}</td>
+                    <td className="px-4 py-2">{proyecto.nombre}</td>
+                    <td className="px-4 py-2">{proyecto.acronimo}</td>                                        
+                    <td className="px-4 py-2">{proyecto.periodo.nombre}</td>
+                    <td className="px-4 py-2">{proyecto.status}</td>
                     <td className="px-4 py-2">
-                      <UpdateColaborador colaborador={colaborador} />
+                      <UpdateProyecto proyecto={proyecto} />
                       {isAdmin && (
-                        <DeleteColaborador id={colaborador.id} />                        
+                        <DeleteProyecto id={proyecto.id} />                        
                       )}                                            
                     </td>
                   </tr>

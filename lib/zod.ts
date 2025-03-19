@@ -168,22 +168,37 @@ export const tareaSchema = object({
   idStatus: string().optional()  
 });
 
+export const proyectoSchema = object({  
+  nombre: string({ required_error: "Nombre es requerido" })
+    .min(1, "Nombre es requerido"),  
+  acronimo: string({ required_error: "Acrónimo es requerido" })
+    .min(1, "Acrónimo es requerido"),     
+  idPeriodo: string({ required_error: "Periodo es requerido" })
+    .min(1, "Periodo es requerido"),   
+  idStatus: string().optional()
+});
+
+export const programacionSchema = object({  
+  idPresupuesto: string({ required_error: "Presupuesto es requerido" })
+    .min(1, "Presupuesto es requerido"), 
+  archivo: z.instanceof(File).nullable() 
+});
+
 export const servicioSchema = object({
   descripcion: string({ required_error: "Descripción es requerido" })
-    .min(1, "Descripción es requerido"),
-  idPeriodo: string().optional(),
-  idGerencia: string().optional(),
-  idSubgerencia: string({ required_error: "Subgerencia es requerido" })
-    .min(1, "Subgerencia es requerido"), 
-  idMeta: string({ required_error: "Meta es requerido" })
-    .min(1, "Meta es requerido"),   
-  idTipoContrato: string({ required_error: "Tipo Contrato es requerido" })
-    .min(1, "Tipo Contrato es requerido"),
+    .min(1, "Descripción es requerido"),  
+  idPresupuesto: string({ required_error: "Presupuesto es requerido" })
+    .min(1, "Presupuesto es requerido"),    
   idGenericaGasto: string({ required_error: "Genérica Gasto es requerido" })
     .min(1, "Genérica Gasto es requerido"),  
   clasificador: string({ required_error: "Clasificador es requerido" })
-    .min(1, "Clasificador es requerido"),  
-  idUnidadMedida: string().optional(),
+    .min(1, "Clasificador es requerido"),
+  idUnidadMedida: string({ required_error: "Unidad Medida es requerido" })
+    .min(1, "Unidad Medida es requerido"),  
+  idTarea: string({ required_error: "Tarea es requerido" })
+    .min(1, "Tarea es requerido"),
+  idProyecto: string({ required_error: "Proyecto es requerido" })
+    .min(1, "Proyecto es requerido"),  
   cantidad: z.number({
       required_error: "Cantidad es requerido",
       invalid_type_error: "Debe ser un número entero",
@@ -269,6 +284,10 @@ export type PlanificacionSchema = z.infer<typeof planificacionSchema>;
 export type MetaSchema = z.infer<typeof metaSchema>;
 export type ActividadSchema = z.infer<typeof actividadSchema>;
 export type TareaSchema = z.infer<typeof tareaSchema>;
+
+export type ProyectoSchema = z.infer<typeof proyectoSchema>;
+export type ProgramacionSchema = z.infer<typeof programacionSchema>;
+
 export type ServicioSchema = z.infer<typeof servicioSchema>;
 export type DefineServicioSchema = z.infer<typeof defineServicioSchema>;
 

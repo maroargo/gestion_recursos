@@ -11,6 +11,7 @@ import {
   GraduationCap,
   House,       
   NotebookTabs,       
+  Projector,       
   School,       
   SquareChartGantt,       
   SquareM,       
@@ -88,6 +89,12 @@ export function AppSidebar({
         icon: CalendarCog,
         isActive: true,
         url: "/periodos",      
+      },                     
+      {
+        title: "Proyectos",      
+        icon: Projector,
+        isActive: true,
+        url: "/proyectos",      
       },
       {
         title: "Planificación",      
@@ -112,6 +119,12 @@ export function AppSidebar({
         icon: SquareChartGantt,
         isActive: true,
         url: "/tareas",      
+      },
+      {
+        title: "Programación",      
+        icon: SquareM,
+        isActive: true,
+        url: "/programacion",      
       }, 
       {
         title: "Bienes y Servicios",      

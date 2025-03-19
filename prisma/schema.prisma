@@ -91,8 +91,7 @@ model Gerencia {
   idOrganization   String?
 
   subgerencias      Subgerencia[] 
-  tareas            Tarea[]
-  servicios         Servicio[]    
+  tareas            Tarea[]  
 
   status        Status          @default(activo)
 
@@ -111,8 +110,7 @@ model Subgerencia {
 
   users             User[]  
   perfilAcademicos  PerfilAcademico[] 
-  tareas            Tarea[] 
-  servicios         Servicio[]
+  tareas            Tarea[]   
 
   status        Status          @default(activo)
 
@@ -139,8 +137,8 @@ model Periodo {
   organization       Organization?    @relation(fields: [idOrganization], references: [id])
   idOrganization     String?
   
-  presupuestos  Presupuesto[]   
-  servicios     Servicio[]
+  presupuestos  Presupuesto[] 
+  proyectos     Proyecto[]     
 
   status        Status          @default(activo)
   
@@ -159,7 +157,8 @@ model Presupuesto {
   idTipoPresupuesto     String?  
 
   procesos      Proceso[]
-  metas         Meta[] 
+  metas         Meta[]
+  servicios     Servicio[]
   status        Status          @default(activo)
 
   createdAt DateTime @default(now())
@@ -217,7 +216,6 @@ model Meta {
   idPresupuesto    String?  
 
   actividades      Actividad[]
-  servicios        Servicio[]
 
   status          Status          @default(activo)    
 
@@ -269,7 +267,9 @@ model Tarea {
   idSubgerencia    String?
 
   actividad        Actividad?        @relation(fields: [idActividad], references: [id])
-  idActividad      String?  
+  idActividad      String? 
+
+  servicios        Servicio[] 
 
   inicio       DateTime?                        
   fin          DateTime?                        
@@ -313,7 +313,7 @@ model TipoContrato {
   siglas        String
   status        Status          @default(activo)
 
-  servicios     Servicio[]
+  
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -331,26 +331,40 @@ model UnidadMedida {
   updatedAt DateTime @updatedAt
 }
 
+model Proyecto {
+  id            String          @id @default(cuid())
+  nombre        String 
+  acronimo      String 
+  status        Status          @default(activo)
+
+  periodo       Periodo?        @relation(fields: [idPeriodo], references: [id])
+  idPeriodo     String?
+
+  servicios     Servicio[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+} 
+
 model Servicio {
   id               String          @id @default(cuid()) 
   descripcion      String     
-  
-  periodo            Periodo?        @relation(fields: [idPeriodo], references: [id])
-  idPeriodo          String?
-  gerencia           Gerencia?        @relation(fields: [idGerencia], references: [id])
-  idGerencia         String?
-  subgerencia        Subgerencia?        @relation(fields: [idSubgerencia], references: [id])
-  idSubgerencia      String?
-  meta               Meta?        @relation(fields: [idMeta], references: [id])
-  idMeta             String?  
-  tipoContrato       TipoContrato?        @relation(fields: [idTipoContrato], references: [id])
-  idTipoContrato     String?  
+      
+  presupuesto        Presupuesto?        @relation(fields: [idPresupuesto], references: [id])
+  idPresupuesto      String?
+
   genericaGasto      GenericaGasto?        @relation(fields: [idGenericaGasto], references: [id])
   idGenericaGasto    String?
+  clasificador       String?  
 
-  clasificador    String?  
-  unidadMedida    UnidadMedida?        @relation(fields: [idUnidadMedida], references: [id])
-  idUnidadMedida   String?
+  unidadMedida       UnidadMedida?        @relation(fields: [idUnidadMedida], references: [id])
+  idUnidadMedida     String?
+
+  tarea              Tarea?        @relation(fields: [idTarea], references: [id])
+  idTarea            String?
+
+  proyecto           Proyecto?        @relation(fields: [idProyecto], references: [id])
+  idProyecto         String?
 
   cantidad        Int?             @default(0)          
   precioUnitario  String?
@@ -374,7 +388,6 @@ model Servicio {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
 
 model PerfilAcademico {
   id                  String          @id @default(cuid())

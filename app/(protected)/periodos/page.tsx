@@ -88,6 +88,7 @@ export default function Periodos() {
             <thead className="bg-colorprimario1 text-white">
               <tr>
                 <th className="px-4 py-2 text-left">Período</th>                
+                <th className="px-4 py-2 text-left">Valor UIT</th>
                 <th className="px-4 py-2 text-left">Presupuestos</th>
                 <th className="px-4 py-2 text-left">Estado Periodo</th>
                 <th className="px-4 py-2 text-left">Estado</th>
@@ -101,7 +102,8 @@ export default function Periodos() {
                     key={periodo.id}
                     className="hover:bg-gray-50 border-b border-[#D3D3D3] "
                   >                    
-                    <td className="px-4 py-2">{periodo.periodo} <br /> {periodo.descripcion}</td>                    
+                    <td className="px-4 py-2"><b>{periodo.periodo}</b> <br /> {periodo.descripcion}</td>      
+                    <td className="px-4 py-2">{periodo.uit}</td>                    
                     <td className="px-4 py-2">
                       {periodo.presupuestos.map((det) => (
                         <HoverCard key={det.id}>

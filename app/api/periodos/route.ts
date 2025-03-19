@@ -35,30 +35,47 @@ export async function GET() {
 export async function POST(request: NextRequest) {
     try { 
         const session = await auth(); 
-        const body = await request.json(); 
-        
-        console.log(body);
+        const body = await request.json();                 
 
-        const newPeriodo = await db.periodo.create({
+        const periodo = await db.periodo.create({
             data: {                
                 periodo: body.periodo,
                 descripcion: body.descripcion,
                 nombre: body.nombre,
+                uit: body.uit,
                 idOrganization: session?.user.idOrganization                
             },
         });        
 
-        /*for (const pre of body.presupuestos) {            
-            await db.presupuesto.create({
+        for (const pre of body.presupuestos) {
+            
+            const tipoPres = await db.tipoPresupuesto.findFirst({ 
+                where: { id: pre.idTipoPresupuesto }
+            }); 
+
+            const presupuesto = await db.presupuesto.create({
                 data: {
                     nombre: pre.nombre,
                     idTipoPresupuesto: pre.idTipoPresupuesto,                    
-                    idPeriodo: newPeriodo.id    
+                    idPeriodo: periodo.id    
                 }
             });
-        };*/
 
-        return NextResponse.json(null, { status: 201 });
+            //Crear procesos
+            if (tipoPres?.value === "2") {
+                for (const pro of pre.procesos) {                    
+                    await db.proceso.create({
+                        data: {                            
+                            name: pro.name,
+                            siglas: pro.siglas,                            
+                            idPresupuesto: presupuesto.id,
+                        }
+                    });
+                }
+            }            
+        };
+
+        return NextResponse.json(periodo, { status: 201 });
     } catch (error) { 
         console.log(error);       
         return NextResponse.json({ message: 'Ocurrió un error' }, { status: 500 });

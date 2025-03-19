@@ -12,14 +12,14 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 
-import PeriodoForm from "@/components/periodos/periodo-form";
-import { type PeriodoSchema } from "@/lib/zod";
+import ProyectoForm from "@/components/proyectos/proyecto-form";
+import { type ProyectoSchema } from "@/lib/zod";
 import { Pencil1Icon } from "@radix-ui/react-icons";
 import { useToast } from "@/hooks/use-toast";
-import { Status, StatusPeriodo } from "@prisma/client";
-import { IPeriodo } from "@/interfaces/periodo";
+import { Status } from "@prisma/client";
+import { IProyecto } from "@/interfaces/proyecto";
 
-export default function UpdatePeriodo({ periodo }: { periodo: IPeriodo }) {
+export default function UpdateProyecto({ proyecto }: { proyecto: IProyecto }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isUpdating, setIsUpdating] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
@@ -27,13 +27,13 @@ export default function UpdatePeriodo({ periodo }: { periodo: IPeriodo }) {
 
     const { toast } = useToast();
 
-    const onSubmit = async (data: PeriodoSchema) => {
+    const onSubmit = async (data: ProyectoSchema) => {
         setIsSubmitting(true);
         try {
-            const response = await fetch("/api/periodos", {
+            const response = await fetch("/api/proyectos", {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ...data, id: periodo.id }),
+                body: JSON.stringify({ ...data, id: proyecto.id }),
             });
 
             const responseData = await response.json();
@@ -46,11 +46,11 @@ export default function UpdatePeriodo({ periodo }: { periodo: IPeriodo }) {
 
             setErrorMessage("");
             setDialogOpen(false);
-            mutate("/api/periodos");
+            mutate("/api/proyectos");
 
             toast({
               title: "Éxito",
-              description: "Período actualizadO satisfactoriamente.",
+              description: "Proyecto actualizado satisfactoriamente.",
             });
         } catch (error) {            
             const errorMessage =
@@ -74,24 +74,21 @@ export default function UpdatePeriodo({ periodo }: { periodo: IPeriodo }) {
                     <Pencil1Icon className="h-4 w-4" />
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[625px] overflow-auto bg-white">
+            <DialogContent className="sm:max-w-[425px] overflow-auto bg-white">
                 <DialogHeader>
-                    <DialogTitle>Actualizar Período</DialogTitle>
+                    <DialogTitle>Actualizar Proyecto</DialogTitle>
                 </DialogHeader>
                 {errorMessage && (
                     <div className="text-red-500 text-sm mb-4">
                         {errorMessage}
                     </div>
                 )}
-                <PeriodoForm
-                    defaultValues={{                                            
-                        periodo: periodo.periodo || "",
-                        descripcion: periodo.descripcion || "",
-                        nombre: periodo.nombre || "",
-                        uit: periodo.uit || "",
-                        presupuestos: periodo.presupuestos || [],
-                        idStatusPeriodo: periodo.statusPeriodo == StatusPeriodo.vigente ? "0" : "1", 
-                        idStatus: periodo.status == Status.activo ? "0" : "1",                        
+                <ProyectoForm
+                    defaultValues={{                        
+                        nombre: proyecto.nombre || "",
+                        acronimo: proyecto.acronimo || "",
+                        idPeriodo: proyecto.idPeriodo || "",
+                        idStatus: proyecto.status == Status.activo ? "0" : "1",                        
                     }}
                     onSubmit={onSubmit}
                     submitButtonText="Actualizar"

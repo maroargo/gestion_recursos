@@ -7,7 +7,6 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { Badge } from "@/components/ui/badge";
 
 import { Role } from '@prisma/client';
 import useSWR from "swr";
@@ -126,7 +125,10 @@ export default function Periodos() {
                     <td className="px-4 py-2">
                       {periodo.statusPeriodo === "vigente" && (
                         <span className="px-3 py-1 text-white bg-red-500 rounded-md">Vigente</span>
-                      )}                     
+                      )}
+                      {periodo.statusPeriodo === "no_vigente" && (
+                        <span>No Vigente</span>
+                      )}                
                     </td>
                     <td className="px-4 py-2">{periodo.status}</td>
                     <td className="px-4 py-2 flex space-x-2">

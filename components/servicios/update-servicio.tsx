@@ -84,16 +84,14 @@ export default function UpdateServicio({ servicio }: { servicio: IServicio }) {
                     </div>
                 )}
                 <ServicioForm
-                    defaultValues={{
+                    defaultValues={{                                    
                         descripcion: servicio.descripcion || "",
-                        idPeriodo: servicio.idPeriodo || "",
-                        idGerencia: servicio.idGerencia || "",                        
-                        idSubgerencia: servicio.idSubgerencia || "",
-                        idMeta: servicio.idMeta || "",                        
-                        idTipoContrato: servicio.idTipoContrato || "",
+                        idPresupuesto: servicio.idPresupuesto || "",                        
                         idGenericaGasto: servicio.idGenericaGasto || "",
                         clasificador: servicio.clasificador || "",
                         idUnidadMedida: servicio.idUnidadMedida || "",
+                        idTarea: servicio.idTarea || "",
+                        idProyecto: servicio.idProyecto || "",
                         cantidad: servicio.cantidad || 0,
                         precioUnitario: servicio.precioUnitario || "",                                                                            
                         idStatus: servicio.status == Status.activo ? "0" : "1",                        

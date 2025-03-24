@@ -1,49 +1,28 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Presupuesto } from "@prisma/client";
+import React, {useState} from 'react';
+
+import { Role } from '@prisma/client';
 import useSWR from "swr";
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-
-import { IPlanificacion } from "@/interfaces/planificacion";
-import CreatePlanificacion from "@/components/planificacion/create-planificacion";
-import { IPlaniTarea } from "@/interfaces/tarea";
-import UpdatePlaniTarea from "@/components/planificacion/update-planificacion-tarea";
+import CreateServicio from '@/components/servicios/create-servicio';
+import UpdateServicio from '@/components/servicios/update-servicio';
+import DeleteServicio from '@/components/servicios/delete-servicio';
+import { IServicio } from '@/interfaces/servicio';
+import CreateProgramacion from '@/components/servicios/create-programacion';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-export default function Tareas() {
-  const [value, setValue] = useState("");
+export default function Servicios() {
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  const {
+    data: servicios,
+    error,
+    isLoading,
+  } = useSWR<IServicio[]>("/api/servicios", fetcher);  
 
-  // Obtener presupuestos
-  const { data: presupuestos } = useSWR<Presupuesto[]>("/api/presupuestos/active", fetcher);
-  const presupuestoList = presupuestos || [];
-
-  useEffect(() => {
-    if (presupuestoList.length > 0 && !value) {
-      setValue(presupuestoList[0].id); // Establece el primer presupuesto automáticamente
-    }
-  }, [presupuestoList]);
-
-  // Obtener programacion
-  const { data: programaciones, error, isLoading } = useSWR<IPlanificacion[]>(
-    value ? `/api/programacion/id?idPresupuesto=${value}` : "/api/programacion",
-    fetcher
-  );
-  const programacionList = programaciones || [];
+  const { data: role } = useSWR<Role>("/api/roles/user", fetcher);
+  const isAdmin = role ? role.name == "Administrador" : false;  
 
   if (isLoading)
     return (
@@ -57,32 +36,92 @@ export default function Tareas() {
 
   if (error) return <div>Ocurrió un error.</div>;
 
-  
+  const servicioList = servicios || [];
+
+  const filteredData = servicioList.filter(item => 
+    item.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="bg-white p-4 py-6 rounded-md">
-      <div className="flex justify-between items-center mb-5">
-        <h1 className="text-xl font-medium">Programación</h1>
-        
-        <CreatePlanificacion />
-      </div>      
+    <>
+      <div className="bg-white p-4 py-6 rounded-md">
+        <div className="flex justify-between items-center mb-5">
+          <h1 className="text-xl font-medium">Programación</h1>
+          <div className="flex gap-3">
+            
+            <CreateServicio />
+            <CreateProgramacion />            
+          </div>
+        </div>
 
-      <div className="mb-4">
-        <Select value={value} onValueChange={setValue}>
-          <SelectTrigger className="w-[300px]">
-            <SelectValue placeholder="Seleccione presupuesto" />
-          </SelectTrigger>
-          <SelectContent>
-            {presupuestoList.map((pre) => (
-              <SelectItem key={pre.id} value={pre.id}>
-                {pre.nombre}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>      
+        <div className="flex justify-between items-center ">
+          <div className="flex justify-between items-center mb-4">
+            <label className="text-sm text-gray-600">
+              <span className="pr-1">Mostrar</span>
 
-      
-      
-    </div>
+              <select className="border border-gray-300 rounded px-2 py-1">
+                <option>10</option>
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+              </select>
+              <span className="pl-1">registros</span>
+            </label>  
+          </div>
+          
+          <input 
+            type="text" 
+            placeholder="Buscar por servicio..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="border border-colorprimario1 rounded-md px-3 py-1"
+          />
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="min-w-full table-auto border-collapse text-sm">
+            <thead className="bg-colorprimario1 text-white">
+              <tr>
+              <th className="px-4 py-2 text-left">Presupuesto</th>
+              <th className="px-4 py-2 text-left">Cant.</th> 
+                <th className="px-4 py-2 text-left">Descripción</th>                
+                <th className="px-4 py-2 text-left">Precio</th>  
+                <th className="px-4 py-2 text-left">Unid. Medida</th>                
+                <th className="px-4 py-2 text-left">Estado</th>
+                <th className="px-4 py-2 text-left">Acciones</th>
+              </tr>
+            </thead>
+            <tbody className="text-gray-700">
+              {filteredData.length > 0 ? (
+                filteredData.map((servicio) => (
+                  <tr
+                    key={servicio.id}
+                    className="hover:bg-gray-50 border-b border-[#D3D3D3] "
+                  >                    
+                    <td className="px-4 py-2">{servicio.presupuesto?.nombre} <br/> <b>{servicio.proyecto?.acronimo}</b></td> 
+                    <td className="px-4 py-2">{servicio.cantidad}</td> 
+                    <td className="px-4 py-2">{servicio.descripcion}</td>                             
+                    <td className="px-4 py-2">
+                      {new Intl.NumberFormat("es-PE", { style: "currency", currency: "PEN" }).format(Number(servicio.precioUnitario) || 0)}
+                    </td>
+                    <td className="px-4 py-2">{servicio.unidadMedida?.name}</td>                                                           
+                    <td className="px-4 py-2">{servicio.status}</td>
+                    <td className="px-4 py-2 flex space-x-2">
+                      <UpdateServicio servicio={servicio} />
+                      <DeleteServicio id={servicio.id} />                                             
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td className="px-4 py-2" colSpan={6}>No se encontraron registros</td>
+                </tr>
+              )}
+              
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </>
   );
 }

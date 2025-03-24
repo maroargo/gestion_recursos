@@ -189,22 +189,12 @@ export const servicioSchema = object({
     .min(1, "Descripción es requerido"),  
   idPresupuesto: string({ required_error: "Presupuesto es requerido" })
     .min(1, "Presupuesto es requerido"),    
-  idGenericaGasto: string({ required_error: "Genérica Gasto es requerido" })
-    .min(1, "Genérica Gasto es requerido"),  
-  clasificador: string({ required_error: "Clasificador es requerido" })
-    .min(1, "Clasificador es requerido"),
-  idUnidadMedida: string({ required_error: "Unidad Medida es requerido" })
-    .min(1, "Unidad Medida es requerido"),  
-  idTarea: string({ required_error: "Tarea es requerido" })
-    .min(1, "Tarea es requerido"),
-  idProyecto: string({ required_error: "Proyecto es requerido" })
-    .min(1, "Proyecto es requerido"),  
-  cantidad: z.number({
-      required_error: "Cantidad es requerido",
-      invalid_type_error: "Debe ser un número entero",
-    })
-    .int("Debe ser un número entero")
-    .min(1, "Debe ser mayor a 0"),    
+  idGenericaGasto: string(),  
+  clasificador: string(),
+  idUnidadMedida: string(),  
+  idTarea: string(),
+  idProyecto: string(),  
+  cantidad: string().optional(),
   precioUnitario: string().optional(),     
   idStatus: string().optional()  
 });

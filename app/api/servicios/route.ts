@@ -2,35 +2,32 @@ import { db } from "@/lib/db";
 import { servicioSchema } from '@/lib/zod';
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from "@/auth";
-import { StatusPeriodo } from "@prisma/client";
 
 export async function GET() {
     try {  
         const session = await auth();                      
 
         const data = await db.servicio.findMany({ 
-            include: {
-                periodo: true,
-                subgerencia: {
+            include: {                
+                presupuesto: {
                     include: {
-                       gerencia: true 
+                       periodo: true 
                     },
-                },
-                meta: true,                
-                tipoContrato: true,
+                },                
                 genericaGasto: true,
                 unidadMedida: true,
+                tarea: true,
+                proyecto: true,
             },  
             where: {
-                AND: [
-                    { periodo: { statusPeriodo: StatusPeriodo.vigente } },                    
-                    { periodo: { idOrganization: session?.user.idOrganization } } ,
+                AND: [                                       
+                    { presupuesto: { periodo: { idOrganization: session?.user.idOrganization } } } ,
                 ]                                     
             },                                
             orderBy: {
                 createdAt: 'asc',
             },
-        });        
+        });                 
         
         return NextResponse.json(data);
     } catch (error) {        
@@ -49,28 +46,17 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ message: 'Invalid input', errors: result.error.errors }, { status: 400 });
         }
 
-        const data = result.data;
-        
-        const periodo = await db.periodo.findFirst({
-            where: { 
-                AND: [
-                    { statusPeriodo: StatusPeriodo.vigente },
-                    { idOrganization: session?.user.idOrganization },
-                ]                
-            },
-        });  
+        const data = result.data;               
 
         const newData = await db.servicio.create({
             data: {
                 descripcion: data.descripcion,
-                idPeriodo: periodo?.id,    
-                idGerencia: data.idGerencia,                    
-                idSubgerencia: data.idSubgerencia,
-                idMeta: data.idMeta,                
-                idTipoContrato: data.idTipoContrato,
+                idPresupuesto: data.idPresupuesto,                    
                 idGenericaGasto: data.idGenericaGasto,
                 clasificador: data.clasificador,
                 idUnidadMedida: data.idUnidadMedida,
+                idTarea: data.idTarea,
+                idProyecto: data.idProyecto,
                 cantidad: data.cantidad,
                 precioUnitario: data.precioUnitario,                
             },
@@ -113,13 +99,12 @@ export async function PUT(request: NextRequest) {
             where: { id },
             data: {                
                 descripcion: rest.descripcion,                                      
-                idGerencia: rest.idGerencia,
-                idSubgerencia: rest.idSubgerencia,
-                idMeta: rest.idMeta,                
-                idTipoContrato: rest.idTipoContrato,
+                idPresupuesto: rest.idPresupuesto,                    
                 idGenericaGasto: rest.idGenericaGasto,
                 clasificador: rest.clasificador,
                 idUnidadMedida: rest.idUnidadMedida,
+                idTarea: rest.idTarea,
+                idProyecto: rest.idProyecto,
                 cantidad: rest.cantidad || 0,
                 precioUnitario: rest.precioUnitario,
                 totalCosto: rest.totalCosto,                                

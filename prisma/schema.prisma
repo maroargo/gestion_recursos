@@ -366,20 +366,20 @@ model Servicio {
   proyecto           Proyecto?        @relation(fields: [idProyecto], references: [id])
   idProyecto         String?
 
-  cantidad        Int?             @default(0)          
+  cantidad        String?         
   precioUnitario  String?
-  enero           Int?             @default(0)
-  febrero         Int?             @default(0)
-  marzo           Int?             @default(0)
-  abril           Int?             @default(0)
-  mayo            Int?             @default(0)
-  junio           Int?             @default(0)
-  julio           Int?             @default(0)
-  agosto          Int?             @default(0)
-  setiembre       Int?             @default(0)
-  octubre         Int?             @default(0)
-  noviembre       Int?             @default(0)
-  diciembre       Int?             @default(0)
+  ene             Int?             @default(0)
+  feb             Int?             @default(0)
+  mar             Int?             @default(0)
+  abr             Int?             @default(0)
+  may             Int?             @default(0)
+  jun             Int?             @default(0)
+  jul             Int?             @default(0)
+  ago             Int?             @default(0)
+  set             Int?             @default(0)
+  oct             Int?             @default(0)
+  nov             Int?             @default(0)
+  dic             Int?             @default(0)
   
   totalCosto      String?
 

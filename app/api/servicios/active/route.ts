@@ -8,28 +8,27 @@ export async function GET() {
         const session = await auth();                      
 
         const data = await db.servicio.findMany({ 
-            include: {
-                periodo: true,
-                subgerencia: {
+            include: {                
+                presupuesto: {
                     include: {
-                       gerencia: true 
+                       periodo: true 
                     },
-                },
-                meta: true,                
-                tipoContrato: true,
+                },                
                 genericaGasto: true,
                 unidadMedida: true,
+                tarea: true,
+                proyecto: true,
             },  
-            where: { 
-                AND: [
-                    { periodo: { statusPeriodo: StatusPeriodo.vigente } },                    
-                    { periodo: { idOrganization: session?.user.idOrganization } } ,
-                ]
+            where: {
+                AND: [ 
+                    { status: Status.activo },                                     
+                    { presupuesto: { periodo: { idOrganization: session?.user.idOrganization } } } ,
+                ]                                     
             },                                
             orderBy: {
                 createdAt: 'asc',
             },
-        });        
+        });         
         
         return NextResponse.json(data);
     } catch (error) {        

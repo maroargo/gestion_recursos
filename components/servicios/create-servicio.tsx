@@ -31,14 +31,12 @@ export default function CreateServicio() {
     resolver: zodResolver(servicioSchema),
     defaultValues: {
       descripcion: "",
-      idPeriodo: "",
-      idGerencia: "",
-      idSubgerencia: "",
-      idMeta: "",      
-      idTipoContrato: "",
+      idPresupuesto: "",      
       idGenericaGasto: "",
       clasificador: "",
       idUnidadMedida: "",
+      idTarea: "",
+      idProyecto: "",
       cantidad: 0,
       precioUnitario: "",      
       idStatus: "0"
@@ -95,14 +93,12 @@ export default function CreateServicio() {
         <ServicioForm
           defaultValues={{
             descripcion: "",
-            idPeriodo: "",
-            idGerencia: "",
-            idSubgerencia: "",
-            idMeta: "",            
-            idTipoContrato: "",
+            idPresupuesto: "",      
             idGenericaGasto: "",
             clasificador: "",
             idUnidadMedida: "",
+            idTarea: "",
+            idProyecto: "",
             cantidad: 0,
             precioUnitario: "",              
             idStatus: "0"            

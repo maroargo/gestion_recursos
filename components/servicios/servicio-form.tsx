@@ -29,12 +29,8 @@ import {
   GenericaGasto,
   Gerencia,
   Meta,
-  Subgerencia,
-  TipoContrato,
-  TipoPresupuesto,
   UnidadMedida,
 } from "@prisma/client";
-import { useEffect, useState } from "react";
 
 interface ServicioFormProps {
   defaultValues: ServicioSchema;
@@ -62,10 +58,7 @@ export default function ServicioForm({
     "/api/gerencias/active",
     fetcher
   );
-  const gerenciaList = gerencias || [];
-  const [subgerenciaList, setSubgerenciaList] = useState<Subgerencia[]>([]);
-  const [selectedGerencia, setSelectedGerencia] = useState("");
-
+  
   const statusList: IStatus[] = [
     { id: "0", name: "Activo" },
     { id: "1", name: "Inactivo" },
@@ -73,12 +66,7 @@ export default function ServicioForm({
 
   const { data: metas } = useSWR<Meta[]>("/api/metas/active", fetcher);
   const metaList = metas || [];
-
-  const { data: tipoContratos } = useSWR<TipoContrato[]>(
-    "/api/tipoContratos",
-    fetcher
-  );
-  const tipoContratoList = tipoContratos || [];
+ 
   const { data: gastos } = useSWR<GenericaGasto[]>(
     "/api/genericaGastos",
     fetcher
@@ -88,29 +76,7 @@ export default function ServicioForm({
     "/api/unidadMedidas",
     fetcher
   );
-  const medidaList = medidas || [];
-
-  // useEffect para cargar subgerencias cuando se selecciona una gerencia
-  useEffect(() => {
-    if (selectedGerencia) {
-      const fetchSubgerencias = async () => {
-        const response = await fetch(
-          `/api/subgerencias/gerencia?idGerencia=${selectedGerencia}`
-        );
-        const subgerenciasData: Subgerencia[] = await response.json();
-        setSubgerenciaList(subgerenciasData || []);
-      };
-
-      fetchSubgerencias();
-    }
-  }, [selectedGerencia]); // Este efecto se ejecuta cuando cambia la gerencia seleccionada
-
-  // Este efecto garantiza que cuando cargamos valores para actualizar, también se obtengan las subgerencias
-  useEffect(() => {
-    if (defaultValues.idGerencia) {
-      setSelectedGerencia(defaultValues.idGerencia);
-    }
-  }, [defaultValues.idGerencia]);
+  const medidaList = medidas || [];  
 
   return (
     <Form {...form}>
@@ -131,118 +97,7 @@ export default function ServicioForm({
               <FormMessage />
             </FormItem>
           )}
-        />
-
-        <div className="grid auto-rows-min gap-4 md:grid-cols-2">
-          <FormField
-            control={form.control}
-            name="idGerencia"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Gerencia</FormLabel>
-                <Select
-                  onValueChange={(value) => {
-                    field.onChange(value);
-                    setSelectedGerencia(value); // Actualizamos la gerencia seleccionada
-                  }}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccione" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {gerenciaList.map((ger) => (
-                      <SelectItem key={ger.id} value={ger.id}>
-                        {ger.siglas}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="idSubgerencia"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Sub Gerencia</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccione" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {subgerenciaList.map((sger) => (
-                      <SelectItem key={sger.id} value={sger.id}>
-                        {sger.siglas}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <FormField
-          control={form.control}
-          name="idMeta"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Meta</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccione meta" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {metaList.map((meta) => (
-                    <SelectItem key={meta.id} value={meta.id}>
-                      {meta.codigo} - {meta.meta}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="idTipoContrato"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tipo Contrato</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccione tipo contrato" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {tipoContratoList.map((contrato) => (
-                    <SelectItem key={contrato.id} value={contrato.id}>
-                      {contrato.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        />                
 
         <div className="grid auto-rows-min gap-4 md:grid-cols-2">
           <FormField

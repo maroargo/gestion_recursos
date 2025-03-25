@@ -25,19 +25,7 @@ async function main() {
     where: { id: '', name: 'Administrador', email:'admin@gestion.com', password:passwordHash, phone: '' },
     update: {},
     create: { name: 'Administrador', email:'admin@gestion.com', password:passwordHash, phone: '', idRole: role.id },
-  })
-
-  await prisma.periodo.deleteMany();
-  const periodoA = await prisma.periodo.upsert({
-    where: { id: '', periodo: '2024', descripcion: 'Periodo Anual 2024', nombre: 'Año del Bicentenario, de la consolidación de nuestra Independencia, y de la conmemoración de las heroicas batallas de Junín y Ayacucho' },
-    update: {},
-    create: { periodo: '2024', descripcion: 'Periodo Anual 2024', nombre: 'Año del Bicentenario, de la consolidación de nuestra Independencia, y de la conmemoración de las heroicas batallas de Junín y Ayacucho' },
-  })
-  const periodoB = await prisma.periodo.upsert({
-    where: { id: '', periodo: '2025', descripcion: 'Periodo Anual 2025', nombre: 'Año de la recuperación y consolidación de la economía peruana' },
-    update: {},
-    create: { periodo: '2025', descripcion: 'Periodo Anual 2025', nombre: 'Año de la recuperación y consolidación de la economía peruana' },
-  })
+  }) 
 
   await prisma.tipoPresupuesto.deleteMany();  
   const tipoPresA = await prisma.tipoPresupuesto.upsert({
@@ -83,8 +71,7 @@ async function main() {
   })  
   
   console.log({ roleA, roleB   
-    , user
-    , periodoA, periodoB
+    , user    
     , tipoPresA, tipoPresB
     , genericagastoA
     , tipoContratoA, tipoContratoB  

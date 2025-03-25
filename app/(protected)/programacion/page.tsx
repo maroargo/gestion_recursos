@@ -2,7 +2,7 @@
 
 import React, {useState} from 'react';
 
-import { Role } from '@prisma/client';
+import { Periodo, Role } from '@prisma/client';
 import useSWR from "swr";
 import CreateServicio from '@/components/servicios/create-servicio';
 import UpdateServicio from '@/components/servicios/update-servicio';
@@ -23,6 +23,8 @@ export default function Servicios() {
 
   const { data: role } = useSWR<Role>("/api/roles/user", fetcher);
   const isAdmin = role ? role.name == "Administrador" : false;  
+
+  const { data: periodo } = useSWR<Periodo>("/api/periodos/active", fetcher);
 
   if (isLoading)
     return (
@@ -85,8 +87,10 @@ export default function Servicios() {
               <th className="px-4 py-2 text-left">Presupuesto</th>
               <th className="px-4 py-2 text-left">Cant.</th> 
                 <th className="px-4 py-2 text-left">Descripción</th>                
-                <th className="px-4 py-2 text-left">Precio</th>  
+                <th className="px-4 py-2 text-left">Clasificador</th> 
+                <th className="px-4 py-2 text-left">Total</th>  
                 <th className="px-4 py-2 text-left">Unid. Medida</th>                
+                <th className="px-4 py-2 text-left">Tarea</th>   
                 <th className="px-4 py-2 text-left">Estado</th>
                 <th className="px-4 py-2 text-left">Acciones</th>
               </tr>
@@ -100,11 +104,34 @@ export default function Servicios() {
                   >                    
                     <td className="px-4 py-2">{servicio.presupuesto?.nombre} <br/> <b>{servicio.proyecto?.acronimo}</b></td> 
                     <td className="px-4 py-2">{servicio.cantidad}</td> 
-                    <td className="px-4 py-2">{servicio.descripcion}</td>                             
-                    <td className="px-4 py-2">
-                      {new Intl.NumberFormat("es-PE", { style: "currency", currency: "PEN" }).format(Number(servicio.precioUnitario) || 0)}
+                    <td className="px-4 py-2">{servicio.descripcion}</td>       
+                    <td className="px-4 py-2">{servicio.clasificador}</td>                                         
+                    <td
+                      className={`px-4 py-2 ${
+                        periodo && Number(servicio.totalCosto) > Number(periodo?.uit) * 5
+                          ? "text-red-500 font-bold"
+                          : ""
+                      }`}
+                    >
+                      {new Intl.NumberFormat("es-PE", {
+                        style: "currency",
+                        currency: "PEN",
+                      }).format(Number(servicio.totalCosto) || 0)}
                     </td>
                     <td className="px-4 py-2">{servicio.unidadMedida?.name}</td>                                                           
+                    <td className="px-4 py-2 flex items-center">
+                      {servicio.tarea?.tarea ? (
+                        <div className="relative group">
+                          <span className="w-3 h-3 bg-green-500 rounded-full inline-block mr-2 cursor-pointer"></span>
+                          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
+                            {servicio.tarea.tarea}
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="w-3 h-3 bg-red-500 rounded-full inline-block"></span>
+                      )}
+                    </td>
+
                     <td className="px-4 py-2">{servicio.status}</td>
                     <td className="px-4 py-2 flex space-x-2">
                       <UpdateServicio servicio={servicio} />

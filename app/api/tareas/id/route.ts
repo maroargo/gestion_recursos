@@ -26,7 +26,8 @@ export async function GET(request: NextRequest) {
 
         const data = await db.tarea.findMany({ 
             include: {
-                actividad: true
+                actividad: true,
+                servicios: true,
             }, 
             where: whereClause,                                
             orderBy: {

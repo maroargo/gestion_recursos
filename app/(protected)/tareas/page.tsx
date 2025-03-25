@@ -103,6 +103,7 @@ export default function Tareas() {
               <th className="px-4 py-2 text-left">Inicio</th>
               <th className="px-4 py-2 text-left">Fin</th>
               <th className="px-4 py-2 text-left w-64">Planificación</th>
+              <th className="px-4 py-2 text-left">Servicios</th>
               <th className="px-4 py-2 text-left">Estado</th>
               <th className="px-4 py-2 text-left">Acciones</th>
             </tr>
@@ -122,6 +123,7 @@ export default function Tareas() {
                       ) : null
                     )}
                   </td>
+                  <td className="px-4 py-2">{tarea.servicios?.length}</td>
                   <td className="px-4 py-2">{tarea.status}</td>
                   <td className="px-4 py-2 flex space-x-2">
                     <UpdateTarea tarea={tarea} />

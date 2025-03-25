@@ -1,3 +1,4 @@
+import { Servicio } from "@prisma/client"
 import { IActividad } from "./actividad"
 
 export interface ITarea {
@@ -22,7 +23,9 @@ export interface ITarea {
         
     idActividad: string
     actividad: IActividad
-    status: string 
+    status: string
+    
+    servicios: Servicio[]
 }
 
 export interface IPlaniTarea {

@@ -55,7 +55,7 @@ async function main() {
   const genericagastoA = await prisma.genericaGasto.upsert({
     where: { id: '', name: 'BIENES Y SERVICIOS' },
     update: {},
-    create: { value: '2.3', name: 'BIENES Y SERVICIOS', descripcion: 'GASTOS POR CONCEPTO DE ADQUISICIÓN DE BIENES PARA EL FUNCIONAMIENTO INSTITUCIONAL Y CUMPLIMIENTO DE FUNCIONES, ASI COMO POR LOS PAGOS POR SERVICIOS DE DIVERSA NATURALEZA PRESTADOS POR PERSONAS NATURALES, SIN VÍNCULO LABORAL CON EL ESTADO, O PERSONAS JURÍDICAS' },
+    create: { value: '2.3', name: 'BIENES Y SERVICIOS', descripcion: 'GASTOS POR CONCEPTO DE ADQUISICIÓN DE BIENES PARA EL FUNCIONAMIENTO INSTITUCIONAL' },
   })
 
   await prisma.tipoContrato.deleteMany();

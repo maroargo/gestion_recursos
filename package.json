@@ -1,6 +1,6 @@
 {
-  "name": "transportation",
-  "version": "0.1.0",
+  "name": "gestion_recurso",
+  "version": "1.0.0",
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
   },

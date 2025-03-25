@@ -1,7 +1,6 @@
 import { db } from "@/lib/db";
-import { actividadSchema } from '@/lib/zod';
-import { Actividad, Meta, Status, StatusPeriodo } from '@prisma/client';
-import { NextRequest, NextResponse } from 'next/server';
+import { Status, StatusPeriodo } from '@prisma/client';
+import { NextResponse } from 'next/server';
 import { auth } from "@/auth";
 
 export async function GET() {

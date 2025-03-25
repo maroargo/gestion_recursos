@@ -134,7 +134,7 @@ export const subgerenciaSchema = object({
 export const planificacionSchema = object({  
   idPresupuesto: string({ required_error: "Presupuesto es requerido" })
     .min(1, "Presupuesto es requerido"), 
-  archivo: z.instanceof(File).nullable() 
+  archivo: typeof File !== "undefined" ? z.instanceof(File).nullable() : z.any().nullable()
 });
 
 export const metaSchema = object({
@@ -181,7 +181,7 @@ export const proyectoSchema = object({
 export const programacionSchema = object({  
   idPresupuesto: string({ required_error: "Presupuesto es requerido" })
     .min(1, "Presupuesto es requerido"), 
-  archivo: z.instanceof(File).nullable() 
+  archivo: typeof File !== "undefined" ? z.instanceof(File).nullable() : z.any().nullable()
 });
 
 export const servicioSchema = object({

@@ -34,7 +34,7 @@ export function NavUser({ user }: {
   const { isMobile } = useSidebar();  
 
   const handleClickLogout = async () => {        
-    await signOut({ callbackUrl: "http://localhost:3000" });
+    await signOut({ callbackUrl: "https://softwaresystemperu.com/" });
   };
 
   return (
